@@ -1,0 +1,29 @@
+@import "./src/assets/scss/colors.scss";
+
+.node {
+  padding: 2px;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+
+  &:focus-within {
+    border: 0.5px solid;
+    border-color: $c-primary;
+  }
+}
+
+.node-name {
+  margin-top: calc(0.05rem + 4px);
+  font-size: 80%;
+  text-align: center;
+}
+
+.output-pins {
+  text-align: -webkit-right;
+}
+
+.node-selected {
+  border: 0.5px solid;
+  border-color: $c-primary;
+}

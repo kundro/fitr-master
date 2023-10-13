@@ -1,0 +1,434 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test PaperJS</title>
+    <meta charset="UTF-8">
+    <!--JS-->
+    <script src="assets\js\mediator.min.js" asp-append-version="true"></script>
+    <script src="assets\js\jquery-3.2.1.min.js" asp-append-version="true"></script>
+    <script src="assets\js\bootstrap-slider.js" asp-append-version="true"></script>
+    <!--	<script src="assets\js\jquery-ui.min.js"></script>-->
+    <script type="text/javascript" src="assets\js\paper.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="assets\js\jquery-ui.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\SettingsManager.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Background.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Tools.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Scaling.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\UndoRedo.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Binding.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\StylesManager.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Drawer.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Layers.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Selection.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\bootstrap.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\bootstrap-colorpicker.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\UI\UI.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\UI\Layers.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\ProjectionPointsDrawer.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Tools3D.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Projection.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\ProjectionManager.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Point3D.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\Keyboard.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="JS\splate.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" asp-append-version="true"></script>
+    <!---CSS-->
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="CSS\style.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap-colorpicker.min.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap-slider.css" asp-append-version="true">
+    <script>
+        $(function () {
+            $("#menu").menu();
+        });
+    </script>
+    <style>
+        .ui-menu {
+            width: 150px;
+        }
+
+        table {
+            font-size: 1em;
+        }
+
+        .ui-draggable, .ui-droppable {
+            background-position: top;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-default">
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><img src="CSS\icon\logo_bird.png"></a>
+            </div>
+            <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button>
+                </li>
+                <li>
+                    <button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button>
+                </li>
+                <li>
+                    <button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button>
+                </li>
+                <li>
+                    <button class="btn btn-danger navbar-btn bouton-image monBouton " id="projectionsSettings">
+                        Projections
+                    </button>
+                </li>
+            </ul>
+            <ul id="navbar.message" style="margin-top: 14px;">
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid tabContent" hidden="true" id="mainPanelSettings" data-nav-id="mainSettings">
+        <div class="tabPanel col-lg-1">
+            <button type="button" onclick="undoRedo.undo();" class="btn btn-primary tabControl">
+                <span class="glyphicon glyphicon-repeat icon-flipped"></span>
+            </button>
+
+            <button type="button" onclick="undoRedo.redo();" class="btn btn-primary tabControl">
+                <span class="glyphicon glyphicon-repeat"></span>
+            </button>
+
+            <button type="button" onclick="undoRedo.save();" class="btn btn-primary tabControl">
+                <span class="glyphicon glyphicon-save"></span>
+            </button>
+
+        </div>
+        <div class="tabPanel col-lg-3">
+            <div id="gridColorStroke" class="input-group colorpicker-component tabControl inline"
+                 data-setting="styles.drawing.strokeColor">
+                <label class="btn btn-secondary">Stroke color</label>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+            <div id="gridColorFillColor" class="input-group colorpicker-component tabControl inline"
+                 data-setting="styles.drawing.fillColor">
+                <label class="btn btn-secondary">Fill color</label>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary" type="button">Stroke width</label>
+                <div class="btn btn-default">
+                    <input id="bootstrap-slider" type="text" data-slider-min="1"
+                           data-slider-max="100" data-slider-step="1" data-slider-value="10"
+                           data-setting="styles.drawing.strokeWidth" />
+                    <div class="valueLabel"></div>
+                </div>
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary" type="button">Opacity</label>
+                <div class="btn btn-default">
+                    <input id="OpacitySetting" width="200" type="text" data-slider-min="0"
+                           data-slider-max="1" data-slider-step="0.1" data-slider-value="0"
+                           data-setting="styles.drawing.opacity" />
+                    <div class="valueLabel"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tabPanel col-lg-3">
+
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Line type</label>
+                <select class="form-control" data-setting="styles.drawing.lineType">
+                    <option value="solid">Solid</option>
+                    <option value="dotted">Dotted</option>
+                    <option value="dashed">Dashed</option>
+                    <option value="dotDash">DotDash</option>
+                    <option value="twoDotsOneDash">TwoDotsOneDash</option>
+                </select>
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Line scaling</label>
+                <div class="btn btn-default">
+                    <input id="LineScalingSetting" type="text" data-slider-min="2"
+                           data-slider-max="101" data-slider-step="1" data-slider-value="1"
+                           data-setting="styles.drawing.lineScaling" />
+                    <div class="valueLabel">1</div>
+                </div>
+            </div>
+        </div>
+        <div class="tabPanel col-lg-3" data-for-tool="text">
+            <div class="input-group colorpicker-component tabControl inline"
+                 data-setting="textStyles.drawing.fillColor">
+                <label class="btn btn-secondary">Font color</label>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+            <div class="input-group tabControl inline">
+                <label class="btn btn-secondary">Font size</label>
+                <input class="form-control" type="number" data-setting="textStyles.drawing.fontSize">
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Font</label>
+                <select class="form-control" data-setting="textStyles.drawing.fontFamily">
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="'Arial Black'">Arial Black</option>
+                    <option value="'Courier New'">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="'Times New Roman'">Times New Roman</option>
+                </select>
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Font weight</label>
+                <select class="form-control" data-setting="textStyles.drawing.fontWeight">
+                    <option value="normal">Normal</option>
+                    <option value="bolder">Bolder</option>
+                    <option value="bold">Bold</option>
+                </select>
+            </div>
+        </div>
+        <div class="tabPanel col-lg-2" data-for-tool="polygon">
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Sides</label>
+                <input class="form-control" type="number" data-setting="tools.polygon.sides">
+            </div>
+        </div>
+        <div class="tabPanel col-lg-2" data-for-tool="star">
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Points</label>
+                <input class="form-control" type="number" data-setting="tools.star.points">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid tabContent" hidden="true" data-nav-id="bindingSettings">
+        <div class="tabPanel col-lg-2">
+            <div class="checkbox tabControl">
+                <label>
+                    <input id="binding.bindToGrid" type="checkbox" data-setting="binding.bindToGrid">Binding to
+                    grid
+                </label>
+            </div>
+            <div class="checkbox tabControl">
+                <label>
+                    <input type="checkbox" data-setting="binding.bindToLineEnds">Binding to
+                    line ends
+                </label>
+            </div>
+            <div class="checkbox tabControl">
+                <label>
+                    <input type="checkbox" data-setting="binding.bindToIntersections">Binding
+                    to intersections
+                </label>
+            </div>
+            <div class="checkbox tabControl">
+                <label>
+                    <input type="checkbox" data-setting="binding.bindToCenters">Binding to
+                    centers
+                </label>
+            </div>
+        </div>
+        <div class="tabPanel col-lg-2">
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Binding tolerance</label>
+                <input class="form-control" type="number" data-setting="binding.bindingTolerance">
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Binding grid step</label>
+                <input class="form-control" type="number" data-setting="binding.gridStep">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid tabContent" hidden="true" data-nav-id="gridSettings">
+        <div class="tabPanel col-lg-1">
+            <div class="checkbox tabControl">
+                <label><input id="background.showGrid" type="checkbox" data-setting="background.showGrid">Draw grid</label>
+            </div>
+            <div class="checkbox tabControl">
+                <label><input type="checkbox" data-setting="background.showAxis">Draw axis</label>
+            </div>
+        </div>
+        <div class="tabPanel col-lg-2">
+            <div id="gridColorPicker" class="input-group colorpicker-component tabControl"
+                 data-setting="background.gridColor">
+                <label class="btn btn-secondary">Grid color</label>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+            <div id="gridColorAxis" class="input-group colorpicker-component tabControl"
+                 data-setting="background.axisColor">
+                <label class="btn btn-secondary">Axis color</label>
+                <span class="input-group-addon"><i></i></span>
+            </div>
+            <div class="input-group tabControlRow">
+                <label class="btn btn-secondary">Grid step</label>
+                <input type="number" class="form-control" data-setting="background.gridStep">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container-fluid tabContent" hidden="true" data-nav-id="projectionsSettings">
+        <div class="tabPanel col-lg-3">
+            <div class="checkbox tabControl">
+                <label><input id="projections.showPointText" type="checkbox" data-setting="projections.showPointText">Show point captions</label>
+            </div>
+            <div class="checkbox tabControl">
+                <label><input id="projections.showLinkLines" type="checkbox" data-setting="projections.showLinkLines">Show projection lines(points automerging)</label>
+            </div>
+            <div class="checkbox tabControl">
+                <label><input type="checkbox" data-setting="background.threeAxis">3D axis</label>
+            </div>
+            <div class="checkbox tabControl">
+                <label><input type="checkbox" data-setting="background.showAxisText">Show axis captions</label>
+            </div>
+        </div>
+        <div class="tabPanel col-lg-3">
+            <!--
+                <button class="btn btn-primary dropdown-toggle tabControl " type="button" data-toggle="dropdown">Tasks
+                    <span class="caret"></span></button>
+                <button class="taskValidate tabControl btn btn-primary">Check</button>
+                <button class="taskCancel tabControl btn btn-primary">Cancel</button>
+                <ul class="dropdown-menu tasksList tabControl">
+                    <li style="display:none"></li>
+                </ul>
+            -->
+        </div>
+        <!--
+        <div class="tabPanel col-lg-3 taskResultsPanel">
+            <ul class="taskErrors tabControl">
+                <li style="display:none"></li>
+            </ul>
+        </div>
+        -->
+    </div>
+
+    <ul class="dropdown-menu draggable toolboxMain" role="menu" aria-labelledby="dropdownMenu">
+        <li data-tool="line"><span class="your-icon icon-simple-line normal"></span></li>
+        <li data-tool="pathLine"><span class="your-icon icon-line normal"></span></li>
+        <li data-tool="circle"><span class="your-icon icon-circle normal"></span></li>
+        <li data-tool="ellipse"><span class="your-icon icon-ellipse normal"></span></li>
+        <li data-tool="rectangle"><span class="your-icon icon-rectangle normal"></span></li>
+        <li data-tool="polygon"><span class="your-icon icon-polygon normal"></span>
+        <li data-tool="star"><span class="your-icon icon-star normal"></span></li>
+        <li data-tool="move"><span class="your-icon icon-move normal"></span></li>
+        <li data-tool="rotate"><span class="your-icon icon-rotate normal"></span></li>
+        <li data-tool="scale"><span class="your-icon icon-scale normal"></span></li>
+
+        <li data-tool="select"><span class="your-icon icon-Select normal"></span></li>
+        <li data-tool="hand"><span class="your-icon icon-hand normal"></span></li>
+        <!--<li data-tool="freeTransform"><span class="your-icon icon-hand normal"></span></li>-->
+        <!--<li data-tool="curveTransform"><span class="your-icon icon-hand normal"></span></li>-->
+        <li data-tool="text"><span class="your-icon icon-text normal"></span></li>
+        <!--<li data-tool="circle3Points"><span class="your-icon icon-text normal"></span></li>-->
+        <!--
+            <li class="divider"></li>
+            <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Path</a>
+            <ul class="dropdown-menu">
+                <li><a tabindex="-1" href="#">Second level</a></li>
+                <li class="dropdown-submenu">
+                    <a href="#">More..</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">3rd level</a></li>
+                        <li><a href="#">3rd level</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Second level</a></li>
+                <li><a href="#">Second level</a></li>
+            </ul>
+            </li>
+        -->
+    </ul>
+
+    <ul class="dropdown-menu draggable toolbox3D" role="menu" aria-labelledby="dropdownMenu">
+        <li data-tool="point"><span class="your-icon icon-dot normal"></span></li>
+        <li data-tool="line"><span class="your-icon icon-line normal"></span></li>
+        <li data-tool="polygon"><span class="your-icon icon-polygon normal"></span></li>
+        <li data-tool="ellipse"><span class="your-icon icon-ellipse normal"></span></li>
+    </ul>
+    <div class="row draggable" id="layoutPanel">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                Layers
+                <span id="addLayout" style="float: right; color:green;" class="glyphicon glyphicon-plus"></span>
+            </div>
+            <!-- List group -->
+            <ul class="list-group" id="AllLayoutPanel">
+            </ul>
+        </div>
+    </div>
+
+    <canvas id="myCanvas" resize></canvas>
+
+
+    <script type="text/javascript">
+    var mediator = new Mediator();
+    var settingsManager = new SettingsManager(mediator);
+
+    var canvas = document.getElementById('myCanvas');
+
+
+    paper.install(window);
+    var undoRedo;
+    var toolbox;
+    var toolbox3D;
+    var layerManager;
+    var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
+    var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager, settingsManager.settings.projections);
+    var projectionManager = new ProjectionManager(mediator, projectionPointsDrawer, stylesManager, settingsManager.settings.projections);
+    window.onload = function () {
+        paper.setup('myCanvas');
+        layerManager = new Layers(mediator);
+
+
+        var background = new Background(mediator, settingsManager.settings.background, stylesManager);
+        var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
+
+        var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
+
+
+        var selection = new Selection(mediator, layerManager);
+        var drawer = new Drawer(mediator, layerManager);
+        var keyboard = new Keyboard();
+        toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
+
+        toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, settingsManager.settings.projections, keyboard);
+        undoRedo = new UndoRedo(mediator, layerManager.userLayers);
+        keyboard.addHandler(function (event) {
+            if (event.key == 'delete') {
+                projectionManager.deleteSelectedProjections();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 'z' && event.modifiers.control) {
+                undoRedo.undo();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 'y' && event.modifiers.control) {
+                undoRedo.redo();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 's' && event.modifiers.control) {
+                undoRedo.save();
+                event.preventDefault();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 'a' && event.modifiers.control) {
+                selection.selectAll();
+                event.preventDefault();
+            }
+        });
+    }
+
+    </script>
+</body>
+</html>

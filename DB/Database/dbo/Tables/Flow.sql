@@ -1,0 +1,15 @@
+﻿CREATE TABLE [dbo].[Flow]
+(
+	[Id] INT IDENTITY NOT NULL,
+    [Name] NVARCHAR(50) NOT NULL, 
+    [IsActive] BIT NOT NULL DEFAULT 1, 
+    [X] INT DEFAULT 0 NOT NULL,
+    [Y] INT DEFAULT 0 NOT NULL,
+
+    [AddDate] DATETIME DEFAULT GETDATE() NOT NULL,
+    [AddSource] NVARCHAR(50) NOT NULL,
+    [ChangeDate] DATETIME,
+    [ChangeSource] NVARCHAR(50),
+
+    CONSTRAINT [PK_Flow] PRIMARY KEY ([Id])
+)

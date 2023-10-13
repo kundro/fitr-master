@@ -1,0 +1,33 @@
+@import "../../../../assets/scss/colors.scss";
+
+.pin {
+  font-size: 0.9rem;
+  margin: 3px;
+  padding: 0.05rem 0.4rem;
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  width: fit-content;
+  &:hover,
+  &:active {
+    background-color: $c-primary;
+    color: $c-white;
+  }
+  &.active {
+    background-color: $c-primary;
+    color: $c-white;
+  }
+
+  i + span,
+  span + i {
+    margin-left: 4px;
+  }
+
+  i,
+  span {
+    pointer-events: none;
+  }
+}
+
+.drag-over {
+  border: 1px dashed;
+}
