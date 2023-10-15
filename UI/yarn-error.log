@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\kundr\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @babel/
+  C:\Program Files\nodejs\node.exe C:\Users\kundr\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/react-notifications
 
 PATH: 
   C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Program Files (x86)\WinMerge;C:\Program Files (x86)\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Docker\Docker\resources\bin;C:\Python27\;C:\Program Files\nodejs\;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin;C:\Users\kundr\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\kundr\AppData\Local\Programs\Python\Python311\;C:\Users\kundr\AppData\Local\Microsoft\WindowsApps;C:\Users\kundr\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\kundr\AppData\Local\GitHubDesktop\bin;C:\Program Files\Azure Data Studio\bin;C:\Users\kundr\.dotnet\tools;C:\Program Files\OpenSSL\bin;C:\Program Files (x86)\Rico Suter\NSwagStudio\;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin;C:\Users\kundr\AppData\Roaming\npm
@@ -14,8 +14,8 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@babel%2f: Request "https://registry.yarnpkg.com/@babel%2f" returned a 405
-      at Request.params.callback [as _callback] (C:\Users\kundr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66154:18)
+  Error: https://registry.yarnpkg.com/@types%2freact-notifications: Not found
+      at Request.params.callback [as _callback] (C:\Users\kundr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66145:18)
       at Request.self.callback (C:\Users\kundr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140890:22)
       at Request.emit (node:events:390:28)
       at Request.<anonymous> (C:\Users\kundr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141862:10)
@@ -32,9 +32,6 @@ npm manifest:
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-      "@babel/plugin-proposal-async-generator-functions": "^7.20.7",
-      "@babel/plugin-proposal-dynamic-import": "^7.18.6",
-      "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
       "@fluentui/react": "^8.14.5",
       "@fortawesome/fontawesome-free": "^5.15.2",
       "@types/classnames": "^2.2.11",
@@ -53,6 +50,7 @@ npm manifest:
       "react": "^17.0.1",
       "react-dom": "^17.0.1",
       "react-draggable": "^4.4.3",
+      "react-notifications": "^1.7.4",
       "react-notifications-component": "^3.0.3",
       "react-router-dom": "^5.2.0",
       "react-scripts": "^5.0.1",
@@ -86,6 +84,14 @@ npm manifest:
       ]
     },
     "devDependencies": {
+      "@babel/plugin-proposal-async-generator-functions": "^7.20.7",
+      "@babel/plugin-proposal-dynamic-import": "^7.18.6",
+      "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+      "@babel/plugin-proposal-json-strings": "^7.18.6",
+      "@babel/plugin-proposal-logical-assignment-operators": "^7.20.7",
+      "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+      "@babel/plugin-proposal-optional-catch-binding": "^7.18.6",
+      "@babel/plugin-proposal-unicode-property-regex": "^7.18.6",
       "@types/react": "^17.0.65",
       "yarn-upgrade-all": "^0.5.4"
     }
@@ -141,7 +147,7 @@ Lockfile:
       "@babel/highlight" "^7.22.13"
       chalk "^2.4.2"
   
-  "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.22.9", "@babel/compat-data@^7.23.2":
+  "@babel/compat-data@^7.20.5", "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.22.9", "@babel/compat-data@^7.23.2":
     version "7.23.2"
     resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.23.2.tgz#6a12ced93455827037bfb5ed8492820d60fc32cc"
     integrity sha512-0S9TQMmDHlqAZ2ITT95irXKfxN9bncq8ZCoJhun3nHL/lLUxd2NKBJYoNGWH7S0hz6fRQwWlAWn/ILM0C70KZQ==
@@ -230,7 +236,7 @@ Lockfile:
     dependencies:
       "@babel/types" "^7.22.15"
   
-  "@babel/helper-compilation-targets@^7.22.15", "@babel/helper-compilation-targets@^7.22.5", "@babel/helper-compilation-targets@^7.22.6":
+  "@babel/helper-compilation-targets@^7.20.7", "@babel/helper-compilation-targets@^7.22.15", "@babel/helper-compilation-targets@^7.22.5", "@babel/helper-compilation-targets@^7.22.6":
     version "7.22.15"
     resolved "https://registry.yarnpkg.com/@babel/helper-compilation-targets/-/helper-compilation-targets-7.22.15.tgz#0698fc44551a26cf29f18d4662d5bf545a6cfc52"
     integrity sha512-y6EEzULok0Qvz8yyLkCvVX+02ic+By2UdOhylwUOvOn9dvYc9mKICJuuU1n1XBI02YWsNsnrY1kc6DVbjcXbtw==
@@ -589,6 +595,22 @@ Lockfile:
       "@babel/helper-plugin-utils" "^7.18.9"
       "@babel/plugin-syntax-export-namespace-from" "^7.8.3"
   
+  "@babel/plugin-proposal-json-strings@^7.18.6":
+    version "7.18.6"
+    resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-json-strings/-/plugin-proposal-json-strings-7.18.6.tgz#7e8788c1811c393aff762817e7dbf1ebd0c05f0b"
+    integrity sha512-lr1peyn9kOdbYc0xr0OdHTZ5FMqS6Di+H0Fz2I/JwMzGmzJETNeOFq2pBySw6X/KFL5EWDjlJuMsUGRFb8fQgQ==
+    dependencies:
+      "@babel/helper-plugin-utils" "^7.18.6"
+      "@babel/plugin-syntax-json-strings" "^7.8.3"
+  
+  "@babel/plugin-proposal-logical-assignment-operators@^7.20.7":
+    version "7.20.7"
+    resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-logical-assignment-operators/-/plugin-proposal-logical-assignment-operators-7.20.7.tgz#dfbcaa8f7b4d37b51e8bfb46d94a5aea2bb89d83"
+    integrity sha512-y7C7cZgpMIjWlKE5T7eJwp+tnRYM89HmRvWM5EQuB5BoHEONjmQ8lSNmBUwOyy/GFRsohJED51YBF79hE1djug==
+    dependencies:
+      "@babel/helper-plugin-utils" "^7.20.2"
+      "@babel/plugin-syntax-logical-assignment-operators" "^7.10.4"
+  
   "@babel/plugin-proposal-nullish-coalescing-operator@^7.16.0":
     version "7.18.6"
     resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-nullish-coalescing-operator/-/plugin-proposal-nullish-coalescing-operator-7.18.6.tgz#fdd940a99a740e577d6c753ab6fbb43fdb9467e1"
@@ -604,6 +626,25 @@ Lockfile:
     dependencies:
       "@babel/helper-plugin-utils" "^7.18.6"
       "@babel/plugin-syntax-numeric-separator" "^7.10.4"
+  
+  "@babel/plugin-proposal-object-rest-spread@^7.20.7":
+    version "7.20.7"
+    resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.20.7.tgz#aa662940ef425779c75534a5c41e9d936edc390a"
+    integrity sha512-d2S98yCiLxDVmBmE8UjGcfPvNEUbA1U5q5WxaWFUGRzJSVAZqm5W6MbPct0jxnegUZ0niLeNX+IOzEs7wYg9Dg==
+    dependencies:
+      "@babel/compat-data" "^7.20.5"
+      "@babel/helper-compilation-targets" "^7.20.7"
+      "@babel/helper-plugin-utils" "^7.20.2"
+      "@babel/plugin-syntax-object-rest-spread" "^7.8.3"
+      "@babel/plugin-transform-parameters" "^7.20.7"
+  
+  "@babel/plugin-proposal-optional-catch-binding@^7.18.6":
+    version "7.18.6"
+    resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-optional-catch-binding/-/plugin-proposal-optional-catch-binding-7.18.6.tgz#f9400d0e6a3ea93ba9ef70b09e72dd6da638a2cb"
+    integrity sha512-Q40HEhs9DJQyaZfUjjn6vE8Cv4GmMHCYuMGIWUnlxH6400VGxOuwWsPt4FxXxJkC/5eOzgn0z21M9gMT4MOhbw==
+    dependencies:
+      "@babel/helper-plugin-utils" "^7.18.6"
+      "@babel/plugin-syntax-optional-catch-binding" "^7.8.3"
   
   "@babel/plugin-proposal-optional-chaining@^7.16.0":
     version "7.21.0"
@@ -626,6 +667,14 @@ Lockfile:
     version "7.21.0-placeholder-for-preset-env.2"
     resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.0-placeholder-for-preset-env.2.tgz#7844f9289546efa9febac2de4cfe358a050bd703"
     integrity sha512-SOSkfJDddaM7mak6cPEpswyTRnuRltl429hMraQEglW+OkovnCzsiszTmsrlY//qLFjCpQDFRvjdm2wA5pPm9w==
+  
+  "@babel/plugin-proposal-unicode-property-regex@^7.18.6":
+    version "7.18.6"
+    resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-unicode-property-regex/-/plugin-proposal-unicode-property-regex-7.18.6.tgz#af613d2cd5e643643b65cded64207b15c85cb78e"
+    integrity sha512-2BShG/d5yoZyXZfVePH91urL5wTG6ASZU9M4o03lKK8u8UW1y08OMttBSOADTcJrnPMpvDXRG3G8fyLh4ovs8w==
+    dependencies:
+      "@babel/helper-create-regexp-features-plugin" "^7.18.6"
+      "@babel/helper-plugin-utils" "^7.18.6"
   
   "@babel/plugin-syntax-async-generators@^7.8.4":
     version "7.8.4"
@@ -1085,7 +1134,7 @@ Lockfile:
       "@babel/helper-skip-transparent-expression-wrappers" "^7.22.5"
       "@babel/plugin-syntax-optional-chaining" "^7.8.3"
   
-  "@babel/plugin-transform-parameters@^7.22.15":
+  "@babel/plugin-transform-parameters@^7.20.7", "@babel/plugin-transform-parameters@^7.22.15":
     version "7.22.15"
     resolved "https://registry.yarnpkg.com/@babel/plugin-transform-parameters/-/plugin-transform-parameters-7.22.15.tgz#719ca82a01d177af358df64a514d64c2e3edb114"
     integrity sha512-hjk7qKIqhyzhhUvRT683TYQOFa/4cQKwQy7ALvTpODswN40MljzNDa0YldevS6tGbxwaEKVn502JmY0dP7qEtQ==
@@ -3078,6 +3127,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-7.2.0.tgz#0de889a601203909b0fbe07b8938dc21d2e967bc"
     integrity sha512-OPdCF6GsMIP+Az+aWfAAOEt2/+iVDKE7oy6lJ098aoe59oAmK76qV6Gw60SbZ8jHuG2wH058GF4pLFbYamYrVA==
   
+  acorn@6.4.1:
+    version "6.4.1"
+    resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.1.tgz#531e58ba3f51b9dacb9a6646ca4debf5b14ca474"
+    integrity sha512-ZVA9k326Nwrj3Cj9jlh3wGFutC2ZornPNARZwsNYqQYgN0EsV2d53w5RN/co65Ohn4sUAUtb1rSUAOD6XN9idA==
+  
   acorn@^7.1.1:
     version "7.4.1"
     resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
@@ -3955,6 +4009,11 @@ Lockfile:
     version "1.2.3"
     resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.2.3.tgz#6c370ab19f8a3394e318fe682686ec0ac684d107"
     integrity sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==
+  
+  classnames@^2.1.1:
+    version "2.3.2"
+    resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
+    integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
   
   classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6:
     version "2.2.6"
@@ -9072,6 +9131,15 @@ Lockfile:
       kleur "^3.0.3"
       sisteransi "^1.0.5"
   
+  prop-types@^15.5.10, prop-types@^15.8.1:
+    version "15.8.1"
+    resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+    integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+    dependencies:
+      loose-envify "^1.4.0"
+      object-assign "^4.1.1"
+      react-is "^16.13.1"
+  
   prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
     version "15.7.2"
     resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
@@ -9080,15 +9148,6 @@ Lockfile:
       loose-envify "^1.4.0"
       object-assign "^4.1.1"
       react-is "^16.8.1"
-  
-  prop-types@^15.8.1:
-    version "15.8.1"
-    resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
-    integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
-    dependencies:
-      loose-envify "^1.4.0"
-      object-assign "^4.1.1"
-      react-is "^16.13.1"
   
   proxy-addr@~2.0.7:
     version "2.0.7"
@@ -9258,6 +9317,16 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-notifications-component/-/react-notifications-component-3.0.3.tgz#512a20ee02e3c9946d31b3a0f65e414f5257e38a"
     integrity sha512-OHE4gyf6UrlB6VvZ56ftPKB/X23ZpPbNzgarNKYMracEiziJgHu8u8e3Fp6earfMcEigxb+LDZAo0dnkiccKqA==
   
+  react-notifications@^1.7.4:
+    version "1.7.4"
+    resolved "https://registry.yarnpkg.com/react-notifications/-/react-notifications-1.7.4.tgz#b35045ee5c1073c0a8a37ec40dc57d502a5efee5"
+    integrity sha512-dsR7mUQfe8YdFLqVsjT0GFd4n26UWkzefdjMELfEVygjuuyU6ZZ0LpZhFHdfmraGeBFLWHNxygpGlHHituUyjQ==
+    dependencies:
+      acorn "6.4.1"
+      classnames "^2.1.1"
+      prop-types "^15.5.10"
+      react-transition-group "^4.4.1"
+  
   react-popper@^2.2.4:
     version "2.3.0"
     resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-2.3.0.tgz#17891c620e1320dce318bad9fede46a5f71c70ba"
@@ -9360,7 +9429,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-top-loading-bar/-/react-top-loading-bar-2.0.1.tgz#c8805ad9c1068766fdd3cadd414e67cfdf1878e9"
     integrity sha512-wkRlK9Rte4TU817GDcjlsCoDOxrrnvsNvK609FKyio0EIrmmqjQDz5DB8HbN88CHNZBy5Lh/OBALc03ioWFPuQ==
   
-  react-transition-group@^4.4.2:
+  react-transition-group@^4.4.1, react-transition-group@^4.4.2:
     version "4.4.5"
     resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"
     integrity sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==
