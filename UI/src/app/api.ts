@@ -23,6 +23,7 @@ import {
 } from "./models/output/platformOutput";
 import { IRunFlowModel, IRunFlowNodeModel } from "./models/output/run";
 import { IRunFlowListItemModel, IRunNodeListItemModel } from "./models/run";
+import { toast } from "react-toastify";
 
 const headers = {
   //   Authorization: "",
@@ -44,22 +45,23 @@ function map<T>(
     .then(({ data }) => {
       if (data?.isSuccess) {
         if (response.success) response.success(data.result);
+        toast.success("Success!"); // Show success toast notification
       } else {
         const errors = data.errors || [];
         if (response.error) response.error(errors);
 
         if (errors.length > 0) {
-          errors.forEach((x) => alert("Danger:" + x.message));
+          errors.forEach((x) => toast.error(x.message)); // Show error toast notification for each error
         } else {
-          alert("Success");
+          toast.error("Error!"); // Show a generic error toast notification
         }
       }
     })
     .catch((reason) => {
-      if (response.error)
+      if (response.error) {
         response.error([{ code: "Api", message: reason.message }]);
-
-      alert("Danger:" + reason.message);
+        toast.error(reason.message); // Show error toast notification for the catch block
+      }
     })
     .finally(() => {
       if (response.finally) response.finally();
