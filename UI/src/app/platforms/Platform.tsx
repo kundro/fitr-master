@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormGroup, Input, Label } from "reactstrap/lib";
+import { Button, FormGroup, Input, Label } from "reactstrap";
 import Navbar from "../components/Navbar";
 import Column from "../components/Table/Column";
 import Table from "../components/Table/Table";

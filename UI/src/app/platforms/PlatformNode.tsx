@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormGroup, Input, Label } from "reactstrap/lib";
+import { Button, FormGroup, Input, Label } from "reactstrap";
 import FormModel, { IFormLoader } from "../components/Form/FormModel";
 import Navbar from "../components/Navbar";
 import api from "../api";

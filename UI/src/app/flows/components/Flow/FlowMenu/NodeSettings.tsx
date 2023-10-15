@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, FormGroup, Label } from "reactstrap/lib";
-import * as RS from "reactstrap/lib";
+import { Button, FormGroup, Label } from "reactstrap";
+import * as RS from "reactstrap";
 import { Observer } from "../../../../../utils/observable";
 import {
   NodeCommandType,

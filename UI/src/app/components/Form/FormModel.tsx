@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Card, Form } from "reactstrap/lib";
+import { Button, Card, Form } from "reactstrap";
 import { useHistory } from "react-router-dom";
 import { IPromiseResponse } from "../../api";
 import LoadingBar from "react-top-loading-bar";

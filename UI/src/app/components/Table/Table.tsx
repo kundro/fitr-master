@@ -5,7 +5,7 @@ import { IPagedModel } from "../../models/base";
 import { ITableProps } from "./props";
 import SearchBox from "./SearchBox";
 import { IFilterOption } from "../../api";
-import { Col, Row } from "reactstrap/lib";
+import { Col, Row } from "reactstrap";
 import LoadingBar from "react-top-loading-bar";
 import "./Table.scss";
 

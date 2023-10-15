@@ -34,9 +34,9 @@ function getOptions(
 }
 
 export function notifyDanger(message: string) {
-  store.addNotification(getOptions(message, "danger"));
+  // store.addNotification(getOptions(message, "danger"));
 }
 
 export function notifySuccess(message: string) {
-  store.addNotification(getOptions(message, "success"));
+  // store.addNotification(getOptions(message, "success"));
 }

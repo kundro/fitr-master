@@ -11,13 +11,13 @@ export const runRoutes = [
     key="runsRoute2"
     path="/run/flows/:id(\d+)"
     exact
-    render={(props) => <RunFlow id={props.match.params.id} />}
+    render={(props) => <RunFlow id={+props.match.params.id} />}
   />,
   <Route
     key="runsRoute3"
     path="/run/nodes/:id(\d+)"
     exact
-    render={(props) => <RunNode id={props.match.params.id} />}
+    render={(props) => <RunNode id={+props.match.params.id} />}
   />,
 ];
 

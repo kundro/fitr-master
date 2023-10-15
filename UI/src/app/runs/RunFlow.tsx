@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { Button, Card, FormGroup, Label } from "reactstrap/lib";
+import { Button, Card, FormGroup, Label } from "reactstrap";
 import { Checkbox, ObservableValue, Observer } from "../../utils/observable";
 import api from "../api";
 import { FLOW_INPUT_NODE_ID, FLOW_OUTPUT_NODE_ID } from "../models/common";

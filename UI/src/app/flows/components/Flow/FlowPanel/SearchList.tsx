@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Label } from "reactstrap/lib";
+import { Button, Label } from "reactstrap";
 
 import Tabs from "../../../../components/Tabs/Tabs";
 import Tab from "../../../../components/Tabs/Tab";
@@ -94,8 +94,8 @@ export default function SearchList({
           }));
 
           observable.value = overrideCollection
-          ? items
-          : observable.value.concat(items);
+            ? items
+            : observable.value.concat(items);
         },
       },
       filter.value

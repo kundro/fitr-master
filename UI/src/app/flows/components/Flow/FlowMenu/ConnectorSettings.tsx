@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, FormGroup } from "reactstrap/lib";
+import { Button, FormGroup } from "reactstrap";
 import { IConnectorObservable } from "../../../Flow";
 
 export interface IConnectorSettingsProps {

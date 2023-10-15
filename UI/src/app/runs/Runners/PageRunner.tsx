@@ -66,7 +66,7 @@ export default function PageRunner({
   }, [response, resolvePromise]);
 
   const cardBodyStyle = {
-    overflow: 'auto',
+    overflow: 'auto'
   };
 
   return (

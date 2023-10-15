@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "reactstrap/lib";
+import { Card } from "reactstrap";
 import api from "../api";
 import Navbar from "../components/Navbar";
 import Column from "../components/Table/Column";

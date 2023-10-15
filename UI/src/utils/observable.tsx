@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import newGuid from "./guid";
-import * as RS from "reactstrap/lib";
+import * as RS from "reactstrap";
 
 export function useObservable<T>(value: T) {
   const [observable] = useState(new ObservableValue(value));

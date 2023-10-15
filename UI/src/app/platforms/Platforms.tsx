@@ -17,7 +17,7 @@ export const platformRoutes = [
     key="platformsRoute2"
     path="/platforms/:id(\d+)"
     exact
-    render={(props) => <Platform id={props.match.params.id} />}
+    render={(props) => <Platform id={+props.match.params.id} />}
   />,
   <Route
     key="platformsRoute3"
@@ -31,8 +31,8 @@ export const platformRoutes = [
     exact
     render={(props) => (
       <PlatformNode
-        id={props.match.params.id}
-        platformId={props.match.params.platformId}
+        id={+props.match.params.id}
+        platformId={+props.match.params.platformId}
       />
     )}
   />,
@@ -41,7 +41,7 @@ export const platformRoutes = [
     path="/platforms/:platformId(\d+)/nodes/create"
     exact
     render={(props) => (
-      <PlatformNode id={0} platformId={props.match.params.platformId} />
+      <PlatformNode id={0} platformId={+props.match.params.platformId} />
     )}
   />,
   <Route
@@ -51,8 +51,8 @@ export const platformRoutes = [
     render={(props) => (
       <PlatformNodePin
         id={0}
-        platformId={props.match.params.platformId}
-        nodeId={props.match.params.nodeId}
+        platformId={+props.match.params.platformId}
+        nodeId={+props.match.params.nodeId}
       />
     )}
   />,
@@ -62,9 +62,9 @@ export const platformRoutes = [
     exact
     render={(props) => (
       <PlatformNodePin
-        id={props.match.params.id}
-        platformId={props.match.params.platformId}
-        nodeId={props.match.params.nodeId}
+        id={+props.match.params.id}
+        platformId={+props.match.params.platformId}
+        nodeId={+props.match.params.nodeId}
       />
     )}
   />,

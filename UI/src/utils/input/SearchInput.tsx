@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "reactstrap/lib";
+import { Input } from "reactstrap";
 
 export default function SearchInput(props: {
   id?: string;

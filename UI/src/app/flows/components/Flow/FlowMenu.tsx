@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { Button } from "reactstrap/lib";
+import { Button } from "reactstrap";
 import { ObservableValue } from "../../../../utils/observable";
 import {
   IConnectorObservable,
@@ -89,9 +89,7 @@ const renderFooter = (flow: IFlowObservable, history: History<unknown>) => {
 
   const onClose = () => {
     if (oldVersionsIds) {
-      oldVersionsIds.forEach(x => 
-        api.flow.delete(x, {success: () => {}})
-      )
+      oldVersionsIds.forEach((x) => api.flow.delete(x, { success: () => {} }));
     }
 
     history.push("/flows");
@@ -350,7 +348,7 @@ export function FlowMenu({ flow, selection }: IFlowMenuProps): JSX.Element {
   };
 
   const cardBodyStyle = {
-    overflow: 'auto',
+    overflow: "auto",
   };
 
   return (

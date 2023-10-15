@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Input, Label } from "reactstrap/lib";
+import { FormGroup, Input, Label } from "reactstrap";
 import newGuid from "../../../utils/guid";
 import { ObservableValue, Observer } from "../../../utils/observable";
 import { FLOW_INPUT_NODE_ID, FLOW_OUTPUT_NODE_ID } from "../../models/common";
@@ -69,7 +69,7 @@ export const getInputByType = (
                 type="text"
                 name={inputGuid}
                 value={observer.pin.value ?? ""}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   pin.value.value = e.target.value;
                   pin.notify();
                 }}
@@ -91,7 +91,7 @@ export default function CommandRunner({
   const outputPins = model.outputPins.map((x) => new ObservableValue(x));
 
   const cardBodyStyle = {
-    overflow: 'auto',
+    overflow: "auto",
   };
 
   return (

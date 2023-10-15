@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Label } from "reactstrap/lib";
+import { FormGroup, Label } from "reactstrap";
 import {
   Checkbox,
   Input,

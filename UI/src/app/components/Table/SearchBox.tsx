@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Input from "reactstrap/lib/Input";
+import { Input } from "reactstrap";
 import { ISearchBoxProps } from "./props";
 // import qs from "query-string";
 

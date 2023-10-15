@@ -11,14 +11,12 @@ import App from "./app/App";
 import { platformRoutes, platformRedirects } from "./app/platforms/Platforms";
 import { flowRoutes, flowRedirects } from "./app/flows/Flows";
 import { runRedirects, runRoutes } from "./app/runs/Runs";
-import ReactNotification from "react-notifications-component";
 import { initializeIcons } from "@uifabric/icons";
 
 initializeIcons();
 
 ReactDOM.render(
   <div className="app-container">
-    <ReactNotification />
     <BrowserRouter>
       <Switch>
         <Route key="rootRoute" path="/" exact>

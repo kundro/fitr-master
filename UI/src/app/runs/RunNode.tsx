@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { Button, Card } from "reactstrap/lib";
+import { Button, Card } from "reactstrap";
 import { ObservableValue, Observer } from "../../utils/observable";
 import api from "../api";
 import { NodeCommandType } from "../models/enums";
