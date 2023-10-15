@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { notifyDanger, notifySuccess } from "../utils/notify/notify";
 import { IPagedModel } from "./models/base";
 import { IFlowListItemModel } from "./models/flow";
 import { IFlowInputModel } from "./models/input/flowInput";
@@ -43,16 +42,16 @@ function map<T>(
 ) {
   promise
     .then(({ data }) => {
-      if (data && data.isSuccess) {
+      if (data?.isSuccess) {
         if (response.success) response.success(data.result);
       } else {
         const errors = data.errors || [];
         if (response.error) response.error(errors);
 
         if (errors.length > 0) {
-          errors.forEach((x) => notifyDanger(x.message));
+          errors.forEach((x) => alert("Danger:" + x.message));
         } else {
-          notifySuccess("Success");
+          alert("Success");
         }
       }
     })
@@ -60,7 +59,7 @@ function map<T>(
       if (response.error)
         response.error([{ code: "Api", message: reason.message }]);
 
-      notifyDanger(reason.message);
+      alert("Danger:" + reason.message);
     })
     .finally(() => {
       if (response.finally) response.finally();
@@ -216,9 +215,12 @@ const api = {
     ) => {
       map(
         response,
-        http.get<IResponse<IFlowsAsTasksListItemOutputModel[]>>("/flows/flowsAsTasks", {
-          params: { filter: filter},
-        })
+        http.get<IResponse<IFlowsAsTasksListItemOutputModel[]>>(
+          "/flows/flowsAsTasks",
+          {
+            params: { filter: filter },
+          }
+        )
       );
     },
     getPlatformList: (
