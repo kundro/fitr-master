@@ -5,10 +5,16 @@ import "./main.scss";
 import CustomDialog from "./dialog";
 import LanguageSelect from "../components/LanguageSelect/LanguageSelect";
 import Button from "@mui/material/Button";
+import { useHistory } from "react-router";
 
-export default function Header() {
+export default function Header({ authPage }: { authPage?: boolean }) {
   const [open, setOpen] = useState(false);
   const [onHover, setOnHover] = useState(false);
+  const history = useHistory();
+
+  const handleLogOut = () => {
+    history.push("/login");
+  };
 
   const handleUserDialogOpen = () => {
     setOpen(true);
@@ -64,7 +70,7 @@ export default function Header() {
       <Button onClick={handleClose} color="warning">
         Reset Password
       </Button>
-      <Button onClick={handleClose} color="error">
+      <Button onClick={handleLogOut} color="error">
         Log Out
       </Button>
     </>
@@ -95,11 +101,13 @@ export default function Header() {
           </ul>
 
           <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <a className="nav-link" href="/">
-                <span className="custom-link">HOME</span>
-              </a>
-            </li>
+            {!authPage && (
+              <li className="nav-item">
+                <a className="nav-link" href="/">
+                  <span className="custom-link">HOME</span>
+                </a>
+              </li>
+            )}
             <li className="nav-item">
               <a className="nav-link" href="about">
                 <span className="custom-link">ABOUT US</span>
@@ -110,20 +118,22 @@ export default function Header() {
                 <span className="custom-link">HELP</span>
               </a>
             </li>
-            <li
-              className="nav-item"
-              onMouseMove={() => setOnHover(true)}
-              onMouseLeave={() => setOnHover(false)}
-            >
-              <a className="nav-link" href="#" onClick={handleUserDialogOpen}>
-                <FontAwesomeIcon
-                  icon={faUser}
-                  bounce={onHover}
-                  size="2xl"
-                  className="user-icon"
-                />
-              </a>
-            </li>
+            {!authPage && (
+              <li
+                className="nav-item"
+                onMouseMove={() => setOnHover(true)}
+                onMouseLeave={() => setOnHover(false)}
+              >
+                <a className="nav-link" href="#" onClick={handleUserDialogOpen}>
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    bounce={onHover}
+                    size="2xl"
+                    className="user-icon"
+                  />
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

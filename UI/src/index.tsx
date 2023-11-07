@@ -16,7 +16,7 @@ import { initializeIcons } from "@uifabric/icons";
 import { ToastContainer } from "react-toastify";
 import { infoRoutes } from "./app/main/Info";
 import ScoreButton from "./app/components/ScoreButton/ScoreButton";
-import CustomDialog from "./app/main/dialog";
+import { authRoutes } from "./app/auth/Auth";
 
 initializeIcons();
 
@@ -36,11 +36,14 @@ ReactDOM.render(
         {runRedirects}
 
         {infoRoutes}
+        {authRoutes}
         <Redirect key="rootRedirect" to="/" />
       </Switch>
     </BrowserRouter>
 
     <ToastContainer />
+
+    <ScoreButton />
   </div>,
   document.getElementById("root")
 );

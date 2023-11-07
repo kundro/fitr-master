@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 import CustomDialog from "../../main/dialog";
+import { Typography } from "@mui/material";
 
 const ScoreButton = () => {
   const [open, setOpen] = useState(false);
@@ -24,9 +25,9 @@ const ScoreButton = () => {
   );
 
   return (
-    <>
+    <div className="help-button-container">
       <Button className="btn btn-info" onClick={handleDialogOpen}>
-        Rating Score: 142
+        Rating Score&nbsp;<Typography color={"yellow"}>{"142"}</Typography>
       </Button>
       <CustomDialog
         open={open}
@@ -34,7 +35,7 @@ const ScoreButton = () => {
         title={UserDialogTitle}
         content={UserDialogContent}
       />
-    </>
+    </div>
   );
 };
 

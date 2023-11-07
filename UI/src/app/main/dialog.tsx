@@ -6,19 +6,21 @@ import { IconButton } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
+type CustomDialogProps = {
+  open: boolean;
+  handleClose: any;
+  title: any;
+  content: any;
+  buttons?: any;
+};
+
 export default function CustomDialog({
   open,
   handleClose,
   title,
   content,
   buttons,
-}: {
-  open: boolean;
-  handleClose: any;
-  title: any;
-  content: any;
-  buttons?: any;
-}) {
+}: CustomDialogProps) {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
