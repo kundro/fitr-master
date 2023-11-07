@@ -12,14 +12,15 @@ interface INav {
 interface INavbarProps {
   children: React.ReactNode;
   nav?: INav[] | INav;
+  authPage?: boolean;
 }
 
-export default function Navbar({ children, nav }: INavbarProps) {
+export default function Navbar({ children, nav, authPage }: INavbarProps) {
   const navItems = Array.isArray(nav) ? nav : !!nav ? [nav] : [];
 
   return (
     <div className="d-flex flex-column h-100">
-      <Header />
+      <Header authPage={authPage} />
       <hr
         style={{
           margin: "0",
