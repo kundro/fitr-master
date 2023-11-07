@@ -1,0 +1,19 @@
+.nav-link .custom-link {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  transition: color 0.6s ease;
+}
+
+.nav-link:hover .custom-link {
+  color: yellow;
+}
+
+.nav-link .user-icon {
+  color: white;
+  transition: color 0.6s ease;
+}
+
+.nav-link:hover .user-icon {
+  color: yellow;
+}

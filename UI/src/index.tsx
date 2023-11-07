@@ -18,7 +18,7 @@ import { ToastContainer } from "react-toastify";
 initializeIcons();
 
 ReactDOM.render(
-  <div className="app-container">
+  <div className="app-container h-100">
     <BrowserRouter>
       <Switch>
         <Route key="rootRoute" path="/" exact>
