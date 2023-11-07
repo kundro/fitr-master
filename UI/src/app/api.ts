@@ -45,7 +45,6 @@ function map<T>(
     .then(({ data }) => {
       if (data?.isSuccess) {
         if (response.success) response.success(data.result);
-        toast.success("Success!"); // Show success toast notification
       } else {
         const errors = data.errors || [];
         if (response.error) response.error(errors);

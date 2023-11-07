@@ -1,97 +1,43 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Server.Common.Dtos;
-using Server.Data.Dtos;
-using System.IdentityModel.Tokens.Jwt;
-using System;
-using System.Security.Claims;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc;
+using Server.Application.Contracts;
+using Server.Application.Models.Output.Flow;
 using System.Threading.Tasks;
 
 namespace Server.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("users")]
     public class UserController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserService _userService;
 
-        public UserController(UserManager<ApplicationUser> userManager)
+        public UserController(IUserService userService)
         {
-            _userManager = userManager;
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto model)
-        {
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                return Ok("User registered successfully.");
-            }
-
-            return BadRequest(result.Errors);
+            _userService = userService;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto model)
+        public async Task<bool> Login([FromBody] UserLoginInputModel model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var res = await _userService.Login(model);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                var token = GenerateJwtToken(user);
-                return Ok(new { token });
-            }
-
-            return Unauthorized("Invalid email or password.");
+            return res;
         }
 
-        [Authorize]
-        [HttpGet("profile")]
-        public IActionResult GetUserProfile()
+        [HttpPost("signup")]
+        public async Task<bool> SignUp()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = _userManager.FindByIdAsync(userId).Result;
+            var res = await _userService.SignUp();
 
-            // Вернуть профиль пользователя
-            return Ok(user);
+            return res;
         }
 
-        private string GenerateJwtToken(ApplicationUser user)
+        [HttpPost("reset")]
+        public async Task<bool> Reset()
         {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.UserName)
-                // Добавьте другие желаемые claims
-            };
+            var res = await _userService.ResetPassword();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKeyHere"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: "Issuer",
-                audience: "Audience",
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1), // Указываете срок действия токена
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return res;
         }
     }
-
 }

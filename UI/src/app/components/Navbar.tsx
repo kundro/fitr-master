@@ -29,7 +29,7 @@ export default function Navbar({ children, nav }: INavbarProps) {
         }}
       />
       <div>
-        <div style={{ height: "7rem" }}>
+        <div style={{ height: "4rem" }}>
           <section className="section section-hero section-shaped">
             <div className="shape shape-style-1 shape-default">
               <span className="span-150" />
@@ -48,7 +48,7 @@ export default function Navbar({ children, nav }: INavbarProps) {
                 xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio="none"
                 version="1.1"
-                viewBox="0 0 2560 100"
+                viewBox="0 0 2560 99"
                 x="0"
                 y="0"
               >
