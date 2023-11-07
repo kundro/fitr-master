@@ -14,6 +14,7 @@ import { flowRoutes, flowRedirects } from "./app/flows/Flows";
 import { runRedirects, runRoutes } from "./app/runs/Runs";
 import { initializeIcons } from "@uifabric/icons";
 import { ToastContainer } from "react-toastify";
+import { infoRoutes } from "./app/main/Info";
 
 initializeIcons();
 
@@ -31,6 +32,8 @@ ReactDOM.render(
         {platformRedirects}
         {flowRedirects}
         {runRedirects}
+
+        {infoRoutes}
         <Redirect key="rootRedirect" to="/" />
       </Switch>
     </BrowserRouter>

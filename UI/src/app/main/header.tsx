@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./main.scss";
+import CustomDialog from "./dialog";
 
 export default function Header() {
+  const [open, setOpen] = useState(false);
+
+  const handleUserDialogOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <nav
       className="navbar navbar-expand-lg navbar-light"
@@ -24,22 +31,22 @@ export default function Header() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/">
                 <span className="custom-link">HOME</span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="about">
                 <span className="custom-link">ABOUT US</span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="help">
                 <span className="custom-link">HELP</span>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="#" onClick={handleUserDialogOpen}>
                 <FontAwesomeIcon
                   icon={faUser}
                   bounce
@@ -51,6 +58,7 @@ export default function Header() {
           </ul>
         </div>
       </div>
+      <CustomDialog open={open} setOpen={setOpen} />
     </nav>
   );
 }
