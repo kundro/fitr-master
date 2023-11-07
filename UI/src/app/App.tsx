@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.scss";
 import Navbar from "./components/Navbar";
 import { Icon } from "@fluentui/react";
 import { initializeIcons } from "@uifabric/icons";
+import ScoreButton from "./components/ScoreButton/ScoreButton";
+import CustomDialog from "./main/dialog";
 
 const cardStyle = {
   fontSize: "6rem",
@@ -38,6 +40,10 @@ function App() {
           {renderButtonCard("Flows", "HighlightMappedShapes", "flows")}
           {renderButtonCard("Runs", "ServerProcesses", "run")}
         </div>
+      </div>
+
+      <div className="help-button-container">
+        <ScoreButton />
       </div>
     </Navbar>
   );

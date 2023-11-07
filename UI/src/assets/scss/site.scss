@@ -1,5 +1,11 @@
 @import "./colors.scss";
 
+.help-button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
 .card {
   margin-bottom: 30px;
   // box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);

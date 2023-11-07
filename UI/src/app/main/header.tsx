@@ -3,13 +3,72 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./main.scss";
 import CustomDialog from "./dialog";
+import LanguageSelect from "../components/LanguageSelect/LanguageSelect";
+import Button from "@mui/material/Button";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [onHover, setOnHover] = useState(false);
 
   const handleUserDialogOpen = () => {
     setOpen(true);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+    setOnHover(false);
+  };
+
+  const UserDialogTitle = "Profile";
+
+  const UserDialogContent = (
+    <div className="d-flex">
+      <div className="mr-3">
+        <p>User Information</p>
+        <div>
+          <span style={{ color: "grey", fontSize: "14px" }}>Name:</span>
+          &nbsp;
+          {"Test Subtest"}
+        </div>
+        <div>
+          <span style={{ color: "grey", fontSize: "14px" }}>Email:</span>
+          &nbsp;
+          {"Test@test.te"}
+        </div>
+        <div>
+          <span style={{ color: "grey", fontSize: "14px" }}>Phone Number:</span>
+          &nbsp;
+          {"+1002223344"}
+        </div>
+      </div>
+      <div
+        style={{
+          borderLeft: "1px solid #d3d3d3",
+          height: "120px",
+          margin: "0 10px",
+        }}
+      ></div>
+      <div className="pl-3">
+        <p>User Group</p>
+        <div>
+          <span style={{ color: "grey", fontSize: "14px" }}>Group Name:</span>
+          &nbsp;
+          {"Student"}
+        </div>
+      </div>
+    </div>
+  );
+
+  const UserDialogButtons = (
+    <>
+      <Button onClick={handleClose} color="warning">
+        Reset Password
+      </Button>
+      <Button onClick={handleClose} color="error">
+        Log Out
+      </Button>
+    </>
+  );
 
   return (
     <nav
@@ -29,6 +88,12 @@ export default function Header() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <LanguageSelect />
+            </li>
+          </ul>
+
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <a className="nav-link" href="/">
@@ -45,11 +110,15 @@ export default function Header() {
                 <span className="custom-link">HELP</span>
               </a>
             </li>
-            <li className="nav-item">
+            <li
+              className="nav-item"
+              onMouseMove={() => setOnHover(true)}
+              onMouseLeave={() => setOnHover(false)}
+            >
               <a className="nav-link" href="#" onClick={handleUserDialogOpen}>
                 <FontAwesomeIcon
                   icon={faUser}
-                  bounce
+                  bounce={onHover}
                   size="2xl"
                   className="user-icon"
                 />
@@ -58,7 +127,13 @@ export default function Header() {
           </ul>
         </div>
       </div>
-      <CustomDialog open={open} setOpen={setOpen} />
+      <CustomDialog
+        open={open}
+        handleClose={handleClose}
+        title={UserDialogTitle}
+        content={UserDialogContent}
+        buttons={UserDialogButtons}
+      />
     </nav>
   );
 }
