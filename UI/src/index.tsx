@@ -26,6 +26,7 @@ ReactDOM.render(
       <Switch>
         <Route key="rootRoute" path="/" exact>
           <App />
+          <ScoreButton />
         </Route>
         {platformRoutes}
         {flowRoutes}
@@ -42,8 +43,6 @@ ReactDOM.render(
     </BrowserRouter>
 
     <ToastContainer />
-
-    <ScoreButton />
   </div>,
   document.getElementById("root")
 );
