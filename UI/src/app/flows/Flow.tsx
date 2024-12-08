@@ -5,6 +5,9 @@ import NodeList from "./components/Flow/FlowPanel/NodeList";
 import ConnectorList from "./components/Flow/FlowPanel/ConnectorList";
 import "./flows.scss";
 import SearchList from "./components/Flow/FlowPanel/SearchList";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Button from "@mui/material/Button";
 import {
   ObservableValue,
   Observer,
@@ -24,6 +27,18 @@ import {
 import api from "../api";
 import newGuid from "../../utils/guid";
 import { PinDirection } from "../models/enums";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 2,
+};
 
 interface IFlowParams {
   id: number;
@@ -64,6 +79,9 @@ export interface IPinObservable {
 export default function Flow({ id }: IFlowParams) {
   const flowPanelRef = React.createRef<HTMLDivElement>();
   const draggableWrapperRef = React.createRef<HTMLDivElement>();
+
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [flowId, setFlowId] = React.useState(0);
 
   const selection = useObservable<IFlowSelection>({ flow: id });
 
@@ -173,13 +191,30 @@ export default function Flow({ id }: IFlowParams) {
           }
         });
 
-        connectors.forEach(connector => {
+        connectors.forEach((connector) => {
           flow.connectors.value = [...flow.connectors.value, connector];
-        })
+        });
 
         flow.nodes.value = [...flow.nodes.value];
       },
     });
+
+    setModalOpen(false);
+  };
+
+  const chooseFlowVariant = (id: number) => {
+    setModalOpen(true);
+    setFlowId(id);
+  };
+
+  const onMultipleFlowElements = () => {
+    onAddFlow(flowId);
+  };
+
+  const onSingleFlowElement = () => {
+    console.log("User chose no");
+    setModalOpen(false);
+    // TODO;
   };
 
   const onNodeSelect = (node: INodeObservable) => {
@@ -234,11 +269,11 @@ export default function Flow({ id }: IFlowParams) {
     }));
     onDrag({ x: model.x, y: model.y });
 
-    addedNodes.forEach(node => {
-      if(node.model.value.nodeId !== 1 && node.model.value.nodeId !== 2){
+    addedNodes.forEach((node) => {
+      if (node.model.value.nodeId !== 1 && node.model.value.nodeId !== 2) {
         flow.nodes.value = [...flow.nodes.value, node];
-      } 
-    })
+      }
+    });
 
     selection.value = { flow: flow.id };
   };
@@ -427,7 +462,7 @@ export default function Flow({ id }: IFlowParams) {
                     isExpanded={observer.selection.searchBox}
                     onMouseDown={() => (selection.value = { searchBox: true })}
                     onAddNode={onAddNode}
-                    onAddFlow={onAddFlow}
+                    onAddFlow={chooseFlowVariant}
                   />
                 </div>
 
@@ -436,6 +471,17 @@ export default function Flow({ id }: IFlowParams) {
             );
           }}
         </Observer>
+        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <Box sx={style}>
+            <h3 id="confirm-title">Select how to integrate the chosen flow:</h3>
+            <Button onClick={onMultipleFlowElements}>
+              Use Separate Elements
+            </Button>
+            <Button onClick={onSingleFlowElement}>
+              Combine into One Element
+            </Button>
+          </Box>
+        </Modal>
       </div>
     </>
   );

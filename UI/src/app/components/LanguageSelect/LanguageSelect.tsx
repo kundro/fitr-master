@@ -2,17 +2,12 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
 import { Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const languages = [{ value: "EN" }, { value: "RU" }];
 
 export default function LanguageSelect() {
-  const { i18n } = useTranslation();
-  const location = useLocation();
-
   return (
     <Box width={"max-content"}>
       <Select
@@ -34,10 +29,7 @@ export default function LanguageSelect() {
         )}
         defaultValue={"EN"}
         displayEmpty
-        onChange={async (ev) => {
-          const code = ev.target.value.toLowerCase();
-          // await i18n.changeLanguage(code);
-        }}
+        onChange={async (ev) => {}}
         renderValue={(value) => {
           return (
             <Box sx={{ display: "flex", gap: 1 }}>

@@ -124,7 +124,11 @@ export default function Header({ authPage }: { authPage?: boolean }) {
                 onMouseMove={() => setOnHover(true)}
                 onMouseLeave={() => setOnHover(false)}
               >
-                <a className="nav-link" href="#" onClick={handleUserDialogOpen}>
+                <a
+                  className="nav-link"
+                  href="help/"
+                  onClick={handleUserDialogOpen}
+                >
                   <FontAwesomeIcon
                     icon={faUser}
                     bounce={onHover}
