@@ -256,9 +256,6 @@ export default function Flow({ id, readOnly }: IFlowParams) {
     endPin.node.connectors.push(connector);
 
     flow.connectors.value = [...flow.connectors.value, connector];
-
-    //TODO: Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
-
     startPin.node.model.notify();
     endPin.node.model.notify();
   };
