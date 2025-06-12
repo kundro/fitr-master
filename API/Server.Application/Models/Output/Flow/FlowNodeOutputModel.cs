@@ -10,6 +10,7 @@ namespace Server.Application.Models.Output.Flow
         public bool IsActive { get; set; }
         public NodeCommandType CommandType { get; set; }
         public string Command { get; set; }
+        public int? SubFlowId { get; set; }
         public int? X { get; set; }
         public int? Y { get; set; }
         public IEnumerable<FlowPinOutputModel> InputPins { get; set; }

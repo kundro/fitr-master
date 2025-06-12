@@ -6,6 +6,7 @@
     [Name] NVARCHAR(50) NOT NULL, 
     [X] INT DEFAULT 0 NOT NULL,
     [Y] INT DEFAULT 0 NOT NULL,
+    [SubFlowId] INT NULL,
 
     [AddDate] DATETIME DEFAULT GETDATE() NOT NULL,
     [AddSource] NVARCHAR(50) NOT NULL,
@@ -20,6 +21,10 @@ ALTER TABLE [Flow_Node] ADD CONSTRAINT [FK_Flow_Flow_Node]
     FOREIGN KEY ([FlowId]) REFERENCES [Flow] ([Id]) 
 GO
 
-ALTER TABLE [Flow_Node] ADD CONSTRAINT [FK_Node_Flow_Node] 
-    FOREIGN KEY ([NodeId]) REFERENCES [Node] ([Id]) 
+ALTER TABLE [Flow_Node] ADD CONSTRAINT [FK_Node_Flow_Node]
+    FOREIGN KEY ([NodeId]) REFERENCES [Node] ([Id])
+GO
+
+ALTER TABLE [Flow_Node] ADD CONSTRAINT [FK_FlowNode_SubFlow]
+    FOREIGN KEY ([SubFlowId]) REFERENCES [Flow] ([Id])
 GO

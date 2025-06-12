@@ -22,6 +22,7 @@ export interface IFlowNodeOutputModel {
   isActive: boolean;
   commandType: NodeCommandType;
   command: string;
+  subFlowId?: number;
   inputPins: IPinValueOutputModel[];
   outputPins: IPinValueOutputModel[];
 }

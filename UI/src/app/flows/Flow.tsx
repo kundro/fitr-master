@@ -23,6 +23,7 @@ import {
   FLOW_INPUT_NODE_ID,
   FLOW_OUTPUT_NODE_ID,
   IPosition,
+  SUBFLOW_NODE_ID,
 } from "../models/common";
 import api from "../api";
 import newGuid from "../../utils/guid";
@@ -42,6 +43,7 @@ const style = {
 
 interface IFlowParams {
   id: number;
+  readOnly?: boolean;
 }
 
 export interface IFlowSelection {
@@ -76,12 +78,13 @@ export interface IPinObservable {
   node: INodeObservable;
 }
 
-export default function Flow({ id }: IFlowParams) {
+export default function Flow({ id, readOnly }: IFlowParams) {
   const flowPanelRef = React.createRef<HTMLDivElement>();
   const draggableWrapperRef = React.createRef<HTMLDivElement>();
 
   const [modalOpen, setModalOpen] = React.useState(false);
   const [flowId, setFlowId] = React.useState(0);
+  const [openSubFlow, setOpenSubFlow] = React.useState<number | null>(null);
 
   const selection = useObservable<IFlowSelection>({ flow: id });
 
@@ -212,9 +215,19 @@ export default function Flow({ id }: IFlowParams) {
   };
 
   const onSingleFlowElement = () => {
-    console.log("User chose no");
+    api.flowNode.get(SUBFLOW_NODE_ID, {
+      success: (template) => {
+        updateKeys([template]);
+        template.subFlowId = flowId;
+        const node = { model: new ObservableValue(template), connectors: [] };
+        flow.nodes.value = [...flow.nodes.value, node];
+      },
+    });
     setModalOpen(false);
-    // TODO;
+  };
+
+  const onOpenSubFlow = (subId: number) => {
+    setOpenSubFlow(subId);
   };
 
   const onNodeSelect = (node: INodeObservable) => {
@@ -453,20 +466,24 @@ export default function Flow({ id }: IFlowParams) {
                       <NodeList
                         nodes={flow.nodes}
                         selectedNode={selection.value.node}
-                        onNodeSelect={onNodeSelect}
-                        onPinsConnect={onPinsConnect}
+                        onNodeSelect={readOnly ? undefined : onNodeSelect}
+                        onPinsConnect={readOnly ? undefined : onPinsConnect}
+                        onOpenFlow={onOpenSubFlow}
+                        readOnly={readOnly}
                       />
                     </div>
                   </Draggable>
-                  <SearchList
-                    isExpanded={observer.selection.searchBox}
-                    onMouseDown={() => (selection.value = { searchBox: true })}
-                    onAddNode={onAddNode}
-                    onAddFlow={chooseFlowVariant}
-                  />
+                  {!readOnly && (
+                    <SearchList
+                      isExpanded={observer.selection.searchBox}
+                      onMouseDown={() => (selection.value = { searchBox: true })}
+                      onAddNode={onAddNode}
+                      onAddFlow={chooseFlowVariant}
+                    />
+                  )}
                 </div>
 
-                <FlowMenu flow={flow} selection={selection} />
+                {!readOnly && <FlowMenu flow={flow} selection={selection} />}
               </div>
             );
           }}
@@ -480,6 +497,12 @@ export default function Flow({ id }: IFlowParams) {
             <Button onClick={onSingleFlowElement}>
               Combine into One Element
             </Button>
+          </Box>
+        </Modal>
+        <Modal open={openSubFlow !== null} onClose={() => setOpenSubFlow(null)}>
+          <Box sx={{ ...style, width: 600 }}>
+            {openSubFlow !== null && <Flow id={openSubFlow} readOnly />}
+            <Button onClick={() => setOpenSubFlow(null)}>Close</Button>
           </Box>
         </Modal>
       </div>

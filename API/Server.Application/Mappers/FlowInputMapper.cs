@@ -34,6 +34,7 @@ namespace Server.Application.Mappers
             {
                 Id = item.Id,
                 NodeId = item.NodeId,
+                SubFlowId = item.SubFlowId,
                 Name = item.Name,
                 PinValues = item.PinValues.Select(x => x.MapToPinValue()).ToList(),
                 X = item.X,

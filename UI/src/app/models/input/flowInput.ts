@@ -22,6 +22,7 @@ export interface IAliasInputModel {
 export interface IFlowNodeInputModel {
   id: number;
   nodeId: number;
+  subFlowId?: number;
   name: string;
   pinValues: IPinValueInputModel[];
   x: number;

@@ -3,6 +3,7 @@ export enum NodeCommandType {
   Page = 1,
   Api = 2,
   Command = 3,
+  Flow = 4,
 }
 
 export enum PinValueType {

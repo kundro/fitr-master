@@ -14,6 +14,7 @@ export interface IRunFlowNodeModel {
   name: string;
   commandType: NodeCommandType;
   command: string;
+  subFlowId?: number;
   inputPins: IRunNodePinModel[];
   outputPins: IRunNodePinModel[];
   processed?: boolean;

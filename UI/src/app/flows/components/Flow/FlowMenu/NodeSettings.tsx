@@ -23,10 +23,13 @@ export interface INodeSettingsProps {
 }
 
 const isTemplateNode = (node: IFlowNodeOutputModel): boolean => {
-  return (
+  if (
     node.commandType === NodeCommandType.Command &&
     ["FLOW_IN", "FLOW_OUT"].includes(node.command)
-  );
+  )
+    return true;
+
+  return node.commandType === NodeCommandType.Flow;
 };
 
 const hasDataPins = (
@@ -214,42 +217,48 @@ export default function NodeSettings({
               </div>
             )) || (
               <div>
-                {(observer.node.command === FLOW_IN_COMMAND && (
-                  <FormGroup key="inputPins">
-                    <dt>Input Aliases</dt>
-                    {observer.node.outputPins.map((pin) =>
-                      renderAliasInput(pin, node, onAliasDelete)
-                    )}
-                  </FormGroup>
-                )) ||
-                  (observer.node.command === FLOW_OUT_COMMAND && (
-                    <FormGroup key="inputPins">
-                      <dt>Output Aliases</dt>
-                      {observer.node.inputPins.map((pin) =>
-                        renderAliasInput(pin, node, onAliasDelete)
-                      )}
+                {observer.node.commandType === NodeCommandType.Flow ? (
+                  <p className="small">Subflow is read-only.</p>
+                ) : (
+                  <>
+                    {(observer.node.command === FLOW_IN_COMMAND && (
+                      <FormGroup key="inputPins">
+                        <dt>Input Aliases</dt>
+                        {observer.node.outputPins.map((pin) =>
+                          renderAliasInput(pin, node, onAliasDelete)
+                        )}
+                      </FormGroup>
+                    )) ||
+                      (observer.node.command === FLOW_OUT_COMMAND && (
+                        <FormGroup key="inputPins">
+                          <dt>Output Aliases</dt>
+                          {observer.node.inputPins.map((pin) =>
+                            renderAliasInput(pin, node, onAliasDelete)
+                          )}
+                        </FormGroup>
+                      ))}
+                    <FormGroup>
+                      <Button
+                        className="text-primary"
+                        color="link"
+                        size="sm"
+                        outline
+                        type="button"
+                        onClick={() =>
+                          onAliasAdd &&
+                          onAliasAdd(
+                            node,
+                            observer.node.command === FLOW_IN_COMMAND
+                              ? PinDirection.Output
+                              : PinDirection.Input
+                          )
+                        }
+                      >
+                        Add New
+                      </Button>
                     </FormGroup>
-                  ))}
-                <FormGroup>
-                  <Button
-                    className="text-primary"
-                    color="link"
-                    size="sm"
-                    outline
-                    type="button"
-                    onClick={() =>
-                      onAliasAdd &&
-                      onAliasAdd(
-                        node,
-                        observer.node.command === FLOW_IN_COMMAND
-                          ? PinDirection.Output
-                          : PinDirection.Input
-                      )
-                    }
-                  >
-                    Add New
-                  </Button>
-                </FormGroup>
+                  </>
+                )}
               </div>
             )}
           </div>
