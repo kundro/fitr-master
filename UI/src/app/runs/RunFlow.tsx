@@ -224,13 +224,13 @@ export default function RunFlow({ id }: IRunFlowProps) {
                     switch (selectedNode.value.commandType) {
                       case NodeCommandType.Command:
                         if (processIfPossible.value) {
-                          nextNode = processWhilePossible(
+                          nextNode = await processWhilePossible(
                             selectedNode.value,
                             model.value?.nodes ?? [],
                             ignoreActivePins.value
                           );
                         } else {
-                          processNode(selectedNode.value);
+                          await processNode(selectedNode.value);
                           nextNode = model.value?.nodes.find((x) =>
                             canProcessNode(x)
                           );
@@ -246,7 +246,23 @@ export default function RunFlow({ id }: IRunFlowProps) {
                           nextNode?.commandType === NodeCommandType.Command &&
                           processIfPossible.value
                         ) {
-                          nextNode = processWhilePossible(
+                          nextNode = await processWhilePossible(
+                            selectedNode.value,
+                            model.value?.nodes ?? [],
+                            ignoreActivePins.value
+                          );
+                        }
+                        break;
+                      case NodeCommandType.Flow:
+                        await processNode(selectedNode.value);
+                        nextNode = model.value?.nodes.find((x) =>
+                          canProcessNode(x)
+                        );
+                        if (
+                          nextNode?.commandType === NodeCommandType.Command &&
+                          processIfPossible.value
+                        ) {
+                          nextNode = await processWhilePossible(
                             selectedNode.value,
                             model.value?.nodes ?? [],
                             ignoreActivePins.value
