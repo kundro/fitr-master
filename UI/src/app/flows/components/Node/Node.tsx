@@ -17,6 +17,7 @@ import {
 import { Observer } from "../../../../utils/observable";
 import classNames from "classnames";
 import { Icon } from "@fluentui/react";
+import { useHistory } from "react-router";
 import Pin, { PinGhost } from "../Pin/Pin";
 import { INodeObservable, IPinObservable } from "../../Flow";
 
@@ -26,6 +27,8 @@ interface INodeProps {
   selected?: boolean;
   onMouseDown?: (node: INodeObservable) => void;
   onPinsConnect?: (startPin: IPinObservable, endPin: IPinObservable) => void;
+  onOpenFlow?: (id: number) => void;
+  readOnly?: boolean;
 }
 
 function commandToIconName(command: NodeCommandType): string {
@@ -46,7 +49,10 @@ export default function Node({
   selected,
   onMouseDown,
   onPinsConnect,
+  onOpenFlow,
+  readOnly,
 }: INodeProps) {
+  const history = useHistory();
   const onDrag: DraggableEventHandler = (
     e: DraggableEvent,
     data: DraggableData
@@ -86,9 +92,10 @@ export default function Node({
               x: Math.round(observer.model.x),
               y: Math.round(observer.model.y),
             }}
-            onDrag={onDrag}
+            disabled={readOnly}
+            onDrag={readOnly ? undefined : onDrag}
             onMouseDown={(e) => {
-              onMouseDown && onMouseDown(observable);
+              if (!readOnly) onMouseDown && onMouseDown(observable);
               e.stopPropagation();
             }}
           >
@@ -97,6 +104,19 @@ export default function Node({
                 "node-selected": selected,
               })}
             >
+              {observer.model.commandType === NodeCommandType.Flow &&
+                observer.model.subFlowId && (
+                  <button
+                    className="open-flow-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onOpenFlow) onOpenFlow(observer.model.subFlowId!);
+                      else history.push(`/flows/${observer.model.subFlowId}`);
+                    }}
+                  >
+                    <Icon iconName="OpenPane" />
+                  </button>
+                )}
               <div className="d-flex flex-row justify-content-between">
                 {(inputPin && (
                   <Pin
@@ -104,7 +124,7 @@ export default function Node({
                     observable={pinToObservable(inputPin)}
                     node={observable}
                     hideName
-                    onPinsConnect={onPinsConnect}
+                    onPinsConnect={readOnly ? undefined : onPinsConnect}
                   />
                 )) || (
                   <PinGhost
@@ -125,7 +145,7 @@ export default function Node({
                     observable={pinToObservable(outputPin)}
                     node={observable}
                     hideName
-                    onPinsConnect={onPinsConnect}
+                    onPinsConnect={readOnly ? undefined : onPinsConnect}
                   />
                 )) || (
                   <PinGhost
@@ -146,7 +166,7 @@ export default function Node({
                         key={pin.key}
                         observable={pinToObservable(pin)}
                         node={observable}
-                        onPinsConnect={onPinsConnect}
+                        onPinsConnect={readOnly ? undefined : onPinsConnect}
                       />
                     ))}
                 </div>
@@ -158,7 +178,7 @@ export default function Node({
                         key={pin.key}
                         observable={pinToObservable(pin)}
                         node={observable}
-                        onPinsConnect={onPinsConnect}
+                        onPinsConnect={readOnly ? undefined : onPinsConnect}
                       />
                     ))}
                 </div>

@@ -52,6 +52,11 @@ export const processNode = (node: IRunFlowNodeModel, context?: object) => {
     case NodeCommandType.Page:
       processPageNode(node, context);
       break;
+    case NodeCommandType.Flow:
+      // For sub-flow nodes we simply mark them as processed.
+      // Sub-flow execution should be handled by higher-level logic.
+      node.processed = true;
+      break;
   }
 };
 

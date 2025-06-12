@@ -27,10 +27,12 @@ namespace Server.Application.Services
                 include.Include(x => x.Aliases)
                         .ThenInclude(x => x.PinValueAliases)
                        .Include(x => x.FlowNodes)
-                        .ThenInclude(x => x.Node)
+                       .ThenInclude(x => x.Node)
                         .ThenInclude(x => x.Pins)
                        .Include(x => x.FlowNodes)
                         .ThenInclude(x => x.PinValues)
+                       .Include(x => x.FlowNodes)
+                        .ThenInclude(x => x.SubFlow)
                        .Include(x => x.Connectors)
                 );
 
