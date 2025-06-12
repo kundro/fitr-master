@@ -8,6 +8,8 @@ export interface INodeListProps {
   selectedNode?: INodeObservable;
   onNodeSelect?: (node: INodeObservable) => void;
   onPinsConnect?: (startPin: IPinObservable, endPin: IPinObservable) => void;
+  onOpenFlow?: (id: number) => void;
+  readOnly?: boolean;
 }
 
 export default function NodeList({
@@ -15,6 +17,8 @@ export default function NodeList({
   selectedNode,
   onNodeSelect,
   onPinsConnect,
+  onOpenFlow,
+  readOnly,
 }: INodeListProps): JSX.Element {
   return (
     <Observer nodes={nodes}>
@@ -28,6 +32,8 @@ export default function NodeList({
                 observable={node}
                 onMouseDown={onNodeSelect}
                 onPinsConnect={onPinsConnect}
+                onOpenFlow={onOpenFlow}
+                readOnly={readOnly}
               />
             );
           })}

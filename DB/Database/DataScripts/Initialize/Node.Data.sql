@@ -3,8 +3,9 @@ SET IDENTITY_INSERT [node] ON
 
 MERGE INTO [node] AS [Target]
 USING (VALUES
-  (1,1,N'Input',NULL,3,1,GETDATE(),N'script',NULL,NULL)
+(1,1,N'Input',NULL,3,1,GETDATE(),N'script',NULL,NULL)
  ,(2,1,N'Output',NULL,3,1,GETDATE(),N'script',NULL,NULL)
+ ,(3,1,N'SubFlow',NULL,4,1,GETDATE(),N'script',NULL,NULL)
 ) AS [Source] ([Id],[PlatformId],[Name],[Command],[CommandType],[IsActive],[AddDate],[AddSource],[ChangeDate],[ChangeSource])
 ON ([Target].[Id] = [Source].[Id])
 WHEN MATCHED AND (

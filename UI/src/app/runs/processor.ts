@@ -1,6 +1,8 @@
 import { camelize } from "../../utils/camelize";
 import { NodeCommandType, PinValueType } from "../models/enums";
-import { IRunFlowNodeModel } from "../models/output/run";
+import { IRunFlowModel, IRunFlowNodeModel } from "../models/output/run";
+import api from "../api";
+import { FLOW_INPUT_NODE_ID, FLOW_OUTPUT_NODE_ID } from "../models/common";
 
 export interface ICommandParameter {
   name: string;
@@ -44,7 +46,99 @@ export const preprocessNode = (node: IRunFlowNodeModel) => {
     .forEach((x) => (x.value = x.parentPin!.value));
 };
 
-export const processNode = (node: IRunFlowNodeModel, context?: object) => {
+export const runFlow = async (
+  model: IRunFlowModel,
+  context?: object
+): Promise<void> => {
+  const inputPins = model.nodes.flatMap((node) => {
+    node.inputPins.forEach((x) => (x.node = node));
+    return node.inputPins;
+  });
+
+  const outputPins = model.nodes.flatMap((node) => {
+    node.outputPins.forEach((x) => (x.node = node));
+    return node.outputPins;
+  });
+
+  model.connectors.forEach((connector) => {
+    const startPin = outputPins.find((x) => x.id === connector.startPinValueId);
+    const endPin = inputPins.find((x) => x.id === connector.endPinValueId);
+
+    if (startPin && endPin) {
+      endPin.parentPin = startPin;
+    }
+  });
+
+  let current: IRunFlowNodeModel | undefined = model.nodes.find(
+    (x) => x.nodeId === FLOW_INPUT_NODE_ID
+  );
+
+  if (current) {
+    preprocessNode(current);
+    await processNode(current, context);
+  }
+
+  while (true) {
+    const next = await processWhilePossible(current!, model.nodes, true);
+    if (!next || next === current) break;
+    current = next;
+  }
+};
+
+export const processSubFlow = async (
+  node: IRunFlowNodeModel,
+  context?: object
+) => {
+  if (!node.subFlowId) {
+    node.processed = true;
+    return;
+  }
+
+  let subFlow: IRunFlowModel | undefined = undefined;
+
+  await new Promise<void>((resolve) => {
+    api.runFlow.get(node.subFlowId!, {
+      success: (res) => {
+        subFlow = res;
+        resolve();
+      },
+    });
+  });
+
+  if (!subFlow) {
+    node.processed = true;
+    return;
+  }
+
+  const inputNode = subFlow.nodes.find((x) => x.nodeId === FLOW_INPUT_NODE_ID);
+  if (inputNode) {
+    inputNode.outputPins.forEach((pin) => {
+      const parentPin = node.inputPins.find(
+        (p) => camelize(p.name) === camelize(pin.name)
+      );
+      if (parentPin) pin.value = parentPin.value;
+    });
+  }
+
+  runFlow(subFlow, context);
+
+  const outputNode = subFlow.nodes.find((x) => x.nodeId === FLOW_OUTPUT_NODE_ID);
+  if (outputNode) {
+    outputNode.inputPins.forEach((pin) => {
+      const parentPin = node.outputPins.find(
+        (p) => camelize(p.name) === camelize(pin.name)
+      );
+      if (parentPin) parentPin.value = pin.value;
+    });
+  }
+
+  node.processed = true;
+};
+
+export const processNode = async (
+  node: IRunFlowNodeModel,
+  context?: object
+) => {
   switch (node.commandType) {
     case NodeCommandType.Command:
       processCommandNode(node, context);
@@ -52,14 +146,17 @@ export const processNode = (node: IRunFlowNodeModel, context?: object) => {
     case NodeCommandType.Page:
       processPageNode(node, context);
       break;
+    case NodeCommandType.Flow:
+      await processSubFlow(node, context);
+      break;
   }
 };
 
-export const processWhilePossible = (
+export const processWhilePossible = async (
   current: IRunFlowNodeModel,
   nodes: IRunFlowNodeModel[],
   ignoreActivePins = false
-): IRunFlowNodeModel | undefined => {
+): Promise<IRunFlowNodeModel | undefined> => {
   let prev: IRunFlowNodeModel | undefined = undefined;
 
   while (true) {
@@ -75,7 +172,7 @@ export const processWhilePossible = (
       return node;
 
     preprocessNode(node);
-    processNode(node);
+    await processNode(node);
     prev = node;
   }
 

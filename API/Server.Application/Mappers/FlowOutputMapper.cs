@@ -82,6 +82,7 @@ namespace Server.Application.Mappers
                 IsActive = item.IsActive,
                 Command = item.Command,
                 CommandType = item.CommandType,
+                SubFlowId = flowNode?.SubFlowId,
                 InputPins = item.Pins?.Where(x => x.Direction == PinDirection.Input)
                     .Select(x => x.MapToFlowPinOutputModel(
                         flowNode?.PinValues?.FirstOrDefault(p => x.Id == p.PinId))),

@@ -44,6 +44,8 @@ namespace Server.Application.Services
                         .ThenInclude(x => x.Pins)
                     .Include(x => x.FlowNodes)
                         .ThenInclude(x => x.PinValues)
+                    .Include(x => x.FlowNodes)
+                        .ThenInclude(x => x.SubFlow)
                     .Include(x => x.Aliases)
                         .ThenInclude(x => x.PinValueAliases)
                     .Include(x => x.Connectors)

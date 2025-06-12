@@ -21,3 +21,4 @@ export const FLOW_OUT_COMMAND = "FLOW_OUT";
 
 export const FLOW_INPUT_NODE_ID = 1;
 export const FLOW_OUTPUT_NODE_ID = 2;
+export const SUBFLOW_NODE_ID = 3;
