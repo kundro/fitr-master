@@ -47,6 +47,7 @@ namespace Server.Application.Mappers
                 Id = flowNode?.Id ?? 0,
                 NodeId = item.Id,
                 Name = flowNode?.Name ?? item.Name,
+                SubFlowId = flowNode?.SubFlowId,
                 CommandType = item.CommandType,
                 Command = item.Command,
                 InputPins = GetPinValues(PinDirection.Input),

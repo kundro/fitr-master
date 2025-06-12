@@ -224,6 +224,7 @@ const mapFlowToInput = (flow: IFlowObservable): IFlowInputModel => {
       return {
         id: node.id,
         nodeId: node.nodeId,
+        subFlowId: node.subFlowId,
         name: node.name,
         x: Math.round(node.x),
         y: Math.round(node.y),
