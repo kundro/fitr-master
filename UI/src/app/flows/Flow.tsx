@@ -44,6 +44,7 @@ const style = {
 interface IFlowParams {
   id: number;
   readOnly?: boolean;
+  preloaded?: IFlowOutputModel;
 }
 
 export interface IFlowSelection {
@@ -71,6 +72,8 @@ export interface IConnectorObservable {
 export interface INodeObservable {
   model: ObservableValue<IFlowNodeOutputModel>;
   connectors: ObservableValue<IConnectorObservable>[];
+  isExpanded: ObservableValue<boolean>;
+  subFlow?: ObservableValue<IFlowOutputModel | undefined>;
 }
 
 export interface IPinObservable {
@@ -78,7 +81,7 @@ export interface IPinObservable {
   node: INodeObservable;
 }
 
-export default function Flow({ id, readOnly }: IFlowParams) {
+export default function Flow({ id, readOnly, preloaded }: IFlowParams) {
   const flowPanelRef = React.createRef<HTMLDivElement>();
   const draggableWrapperRef = React.createRef<HTMLDivElement>();
 
@@ -87,6 +90,7 @@ export default function Flow({ id, readOnly }: IFlowParams) {
   const [openSubFlow, setOpenSubFlow] = React.useState<number | null>(null);
 
   const selection = useObservable<IFlowSelection>({ flow: id });
+  const subFlowsCache = React.useRef<Record<number, IFlowOutputModel>>({});
 
   const flow: IFlowObservable = {
     id: id,
@@ -134,7 +138,12 @@ export default function Flow({ id, readOnly }: IFlowParams) {
         response.x = response.x || flowPanelSize.width / 2 - flow.position.x;
         response.y = response.y || flowPanelSize.height / 2 - flow.position.y;
 
-        const node = { model: new ObservableValue(response), connectors: [] };
+        const node: INodeObservable = {
+          model: new ObservableValue(response),
+          connectors: [],
+          isExpanded: new ObservableValue(false),
+          subFlow: new ObservableValue<IFlowOutputModel | undefined>(undefined),
+        };
 
         flow.nodes.value = [...flow.nodes.value, node];
 
@@ -219,8 +228,25 @@ export default function Flow({ id, readOnly }: IFlowParams) {
       success: (template) => {
         updateKeys([template]);
         template.subFlowId = flowId;
-        const node = { model: new ObservableValue(template), connectors: [] };
+        const node: INodeObservable = {
+          model: new ObservableValue(template),
+          connectors: [],
+          isExpanded: new ObservableValue(false),
+          subFlow: new ObservableValue<IFlowOutputModel | undefined>(undefined),
+        };
         flow.nodes.value = [...flow.nodes.value, node];
+
+        const cached = subFlowsCache.current[flowId];
+        if (cached) {
+          node.subFlow!.value = cached;
+        } else {
+          api.flow.get(flowId, {
+            success: (res) => {
+              subFlowsCache.current[flowId] = res;
+              node.subFlow!.value = res;
+            },
+          });
+        }
       },
     });
     setModalOpen(false);
@@ -266,6 +292,8 @@ export default function Flow({ id, readOnly }: IFlowParams) {
     flow.nodes.value = model.nodes.map<INodeObservable>((x) => ({
       model: new ObservableValue(x),
       connectors: [],
+      isExpanded: new ObservableValue(false),
+      subFlow: new ObservableValue<IFlowOutputModel | undefined>(undefined),
     }));
     onDrag({ x: model.x, y: model.y });
 
@@ -276,6 +304,8 @@ export default function Flow({ id, readOnly }: IFlowParams) {
     const addedNodes = model.nodes.map<INodeObservable>((x) => ({
       model: new ObservableValue(x),
       connectors: [],
+      isExpanded: new ObservableValue(false),
+      subFlow: new ObservableValue<IFlowOutputModel | undefined>(undefined),
     }));
     onDrag({ x: model.x, y: model.y });
 
@@ -426,7 +456,15 @@ export default function Flow({ id, readOnly }: IFlowParams) {
     }
   };
 
-  loadFlow();
+  React.useEffect(() => {
+    if (preloaded) {
+      updateKeys(preloaded.nodes);
+      updateFlowObservable(preloaded);
+    } else {
+      loadFlow();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, preloaded]);
 
   return (
     <>

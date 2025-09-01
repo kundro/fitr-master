@@ -8,6 +8,7 @@ import "./Node.scss";
 import {
   IFlowNodeOutputModel,
   IPinValueOutputModel,
+  IFlowOutputModel,
 } from "../../../models/output/flowOutput";
 import {
   NodeCommandType,
@@ -15,6 +16,7 @@ import {
   PinValueType,
 } from "../../../models/enums";
 import { Observer } from "../../../../utils/observable";
+import Flow from "../../Flow";
 import classNames from "classnames";
 import { Icon } from "@fluentui/react";
 import { useHistory } from "react-router";
@@ -68,8 +70,16 @@ export default function Node({
   };
 
   return (
-    <Observer model={observable.model}>
-      {(observer: { model: IFlowNodeOutputModel }) => {
+    <Observer
+      model={observable.model}
+      isExpanded={observable.isExpanded}
+      subFlow={observable.subFlow}
+    >
+      {(observer: {
+        model: IFlowNodeOutputModel;
+        isExpanded: boolean;
+        subFlow?: IFlowOutputModel;
+      }) => {
         let inputPin = observer.model.inputPins.find(
           (x) => x.valueType === PinValueType.Node
         );
@@ -100,89 +110,115 @@ export default function Node({
             }}
           >
             <div
-              className={classNames("card node d-flex flex-column noselect", {
-                "node-selected": selected,
-              })}
+              onMouseEnter={() => {
+                if (observer.model.subFlowId)
+                  observable.isExpanded.value = true;
+              }}
+              onMouseLeave={() => {
+                if (observer.model.subFlowId)
+                  observable.isExpanded.value = false;
+              }}
             >
-              {observer.model.commandType === NodeCommandType.Flow &&
-                observer.model.subFlowId && (
-                  <button
-                    className="open-flow-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onOpenFlow) onOpenFlow(observer.model.subFlowId!);
-                      else history.push(`/flows/${observer.model.subFlowId}`);
-                    }}
-                  >
-                    <Icon iconName="OpenPane" />
-                  </button>
-                )}
-              <div className="d-flex flex-row justify-content-between">
-                {(inputPin && (
-                  <Pin
-                    key={inputPin.key}
-                    observable={pinToObservable(inputPin)}
-                    node={observable}
-                    hideName
-                    onPinsConnect={readOnly ? undefined : onPinsConnect}
-                  />
-                )) || (
-                  <PinGhost
-                    direction={PinDirection.Input}
-                    valueType={PinValueType.Node}
-                  />
-                )}
-                <span className="node-name font-weight-bold">
-                  <Icon
-                    iconName={commandToIconName(observer.model.commandType)}
-                    className="mr-1 font-weight-bold align-middle"
-                  />
-                  <span className="align-middle">{observer.model.name}</span>
-                </span>
-                {(outputPin && (
-                  <Pin
-                    key={outputPin.key}
-                    observable={pinToObservable(outputPin)}
-                    node={observable}
-                    hideName
-                    onPinsConnect={readOnly ? undefined : onPinsConnect}
-                  />
-                )) || (
-                  <PinGhost
-                    direction={PinDirection.Output}
-                    valueType={PinValueType.Node}
-                  />
-                )}
-              </div>
               <div
-                className="d-flex justify-content-between"
-                style={{ width: "100%" }}
+                className={classNames("card node d-flex flex-column noselect", {
+                  "node-selected": selected,
+                })}
               >
-                <div className="input-pins">
-                  {observer.model.inputPins
-                    .filter((x) => x !== inputPin)
-                    .map((pin) => (
-                      <Pin
-                        key={pin.key}
-                        observable={pinToObservable(pin)}
-                        node={observable}
-                        onPinsConnect={readOnly ? undefined : onPinsConnect}
-                      />
-                    ))}
+                {observer.model.commandType === NodeCommandType.Flow &&
+                  observer.model.subFlowId && (
+                    <button
+                      className="open-flow-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onOpenFlow) onOpenFlow(observer.model.subFlowId!);
+                        else history.push(`/flows/${observer.model.subFlowId}`);
+                      }}
+                    >
+                      <Icon iconName="OpenPane" />
+                    </button>
+                  )}
+                <div className="d-flex flex-row justify-content-between">
+                  {(inputPin && (
+                    <Pin
+                      key={inputPin.key}
+                      observable={pinToObservable(inputPin)}
+                      node={observable}
+                      hideName
+                      onPinsConnect={readOnly ? undefined : onPinsConnect}
+                    />
+                  )) || (
+                    <PinGhost
+                      direction={PinDirection.Input}
+                      valueType={PinValueType.Node}
+                    />
+                  )}
+                  <span className="node-name font-weight-bold">
+                    <Icon
+                      iconName={commandToIconName(observer.model.commandType)}
+                      className="mr-1 font-weight-bold align-middle"
+                    />
+                    <span className="align-middle">{observer.model.name}</span>
+                  </span>
+                  {(outputPin && (
+                    <Pin
+                      key={outputPin.key}
+                      observable={pinToObservable(outputPin)}
+                      node={observable}
+                      hideName
+                      onPinsConnect={readOnly ? undefined : onPinsConnect}
+                    />
+                  )) || (
+                    <PinGhost
+                      direction={PinDirection.Output}
+                      valueType={PinValueType.Node}
+                    />
+                  )}
                 </div>
-                <div className="output-pins">
-                  {observer.model.outputPins
-                    .filter((x) => x !== outputPin)
-                    .map((pin) => (
-                      <Pin
-                        key={pin.key}
-                        observable={pinToObservable(pin)}
-                        node={observable}
-                        onPinsConnect={readOnly ? undefined : onPinsConnect}
-                      />
-                    ))}
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ width: "100%" }}
+                >
+                  <div className="input-pins">
+                    {observer.model.inputPins
+                      .filter((x) => x !== inputPin)
+                      .map((pin) => (
+                        <Pin
+                          key={pin.key}
+                          observable={pinToObservable(pin)}
+                          node={observable}
+                          onPinsConnect={readOnly ? undefined : onPinsConnect}
+                        />
+                      ))}
+                  </div>
+                  <div className="output-pins">
+                    {observer.model.outputPins
+                      .filter((x) => x !== outputPin)
+                      .map((pin) => (
+                        <Pin
+                          key={pin.key}
+                          observable={pinToObservable(pin)}
+                          node={observable}
+                          onPinsConnect={readOnly ? undefined : onPinsConnect}
+                        />
+                      ))}
+                  </div>
                 </div>
               </div>
+              {observer.model.subFlowId && (
+                <div
+                  className={classNames("subflow-inline", {
+                    expanded: observer.isExpanded,
+                  })}
+                >
+                  {observer.isExpanded && observer.subFlow && (
+                    <Flow
+                      id={observer.model.subFlowId}
+                      readOnly
+                      preloaded={observer.subFlow}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </Draggable>
         );

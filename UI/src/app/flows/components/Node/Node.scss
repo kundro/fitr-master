@@ -41,3 +41,13 @@
 .node:hover .open-flow-button {
   display: block;
 }
+
+.subflow-inline {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+}
+
+.subflow-inline.expanded {
+  max-height: 1000px;
+}
