@@ -11,6 +11,12 @@ namespace Server.Data.Dtos
         public int X { get; set; }
         public int Y { get; set; }
 
+        public int? SubFlowId { get; set; }
+        public Flow SubFlow { get; set; }
+
+        public int? FlowSubFlowId { get; set; }
+        public FlowSubFlow FlowSubFlow { get; set; }
+
         public Node Node { get; set; }
         public ICollection<PinValue> PinValues { get; set; }
     }

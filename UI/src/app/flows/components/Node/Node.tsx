@@ -95,7 +95,25 @@ export default function Node({
             <div
               className={classNames("card node d-flex flex-column noselect", {
                 "node-selected": selected,
+                "node-flow-group": observable.flowGroupId && !observable.isFlowProxy,
+                "node-flow-proxy": observable.isFlowProxy,
               })}
+              style={
+                observable.flowGroupId && observable.groupColor
+                  ? {
+                      borderColor: observable.groupColor,
+                      ...(observable.isFlowProxy 
+                        ? { 
+                            background: `linear-gradient(135deg, ${observable.groupColor}15 0%, ${observable.groupColor}25 100%)` 
+                          }
+                        : { 
+                            borderLeftColor: observable.groupColor,
+                            borderLeftWidth: '4px'
+                          }
+                      )
+                    }
+                  : {}
+              }
             >
               <div className="d-flex flex-row justify-content-between">
                 {(inputPin && (

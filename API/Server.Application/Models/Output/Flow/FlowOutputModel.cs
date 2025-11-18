@@ -11,5 +11,6 @@ namespace Server.Application.Models.Output.Flow
         public IEnumerable<FlowAliasOutputModel> Aliases { get; set; }
         public IEnumerable<FlowNodeOutputModel> Nodes { get; set; }
         public IEnumerable<FlowConnectorOutputModel> Connectors { get; set; }
+        public IEnumerable<FlowSubFlowOutputModel> SubFlows { get; set; }
     }
 }

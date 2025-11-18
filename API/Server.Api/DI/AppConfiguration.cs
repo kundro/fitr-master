@@ -53,7 +53,8 @@ namespace Server.Api.DI
                 .AddScoped<INodeRepository, NodeRepository>()
                 .AddScoped<IPinRepository, PinRepository>()
                 .AddScoped<IConnectorRepository, ConnectorRepository>()
-                .AddScoped<IAliasRepository, AliasRepository>();
+                .AddScoped<IAliasRepository, AliasRepository>()
+                .AddScoped<IFlowSubFlowRepository, FlowSubFlowRepository>();
         }
 
         public static IServiceCollection ConfigureContexts(this IServiceCollection services, IConfiguration configuration)

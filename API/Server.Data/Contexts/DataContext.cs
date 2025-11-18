@@ -49,6 +49,20 @@ namespace Server.Data.Contexts
             modelBuilder.Entity<FlowNode>(x =>
             {
                 x.ToTable("Flow_Node");
+                
+                // Configure the relationship to FlowSubFlow (nullable)
+                x.HasOne(fn => fn.FlowSubFlow)
+                    .WithMany(fs => fs.FlowNodes)
+                    .HasForeignKey(fn => fn.FlowSubFlowId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.SetNull);
+                    
+                // Configure the relationship to SubFlow (nullable)
+                x.HasOne(fn => fn.SubFlow)
+                    .WithMany()
+                    .HasForeignKey(fn => fn.SubFlowId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Alias>(x =>
@@ -65,6 +79,23 @@ namespace Server.Data.Contexts
             {
                 x.ToTable("Connector");
             });
+
+            modelBuilder.Entity<FlowSubFlow>(x =>
+            {
+                x.ToTable("Flow_SubFlow");
+                
+                // Configure the relationship between parent Flow and FlowSubFlow
+                x.HasOne(fs => fs.ParentFlow)
+                    .WithMany(f => f.SubFlows)
+                    .HasForeignKey(fs => fs.ParentFlowId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                // Configure the relationship to the sub flow
+                x.HasOne(fs => fs.SubFlow)
+                    .WithMany()
+                    .HasForeignKey(fs => fs.SubFlowId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
         }
 
         public DbSet<Node> Nodes { get; set; }
@@ -76,5 +107,6 @@ namespace Server.Data.Contexts
         public DbSet<Flow> Flows { get; set; }
         public DbSet<FlowNode> FlowNodes { get; set; }
         public DbSet<Connector> Connectors { get; set; }
+        public DbSet<FlowSubFlow> FlowSubFlows { get; set; }
     }
 }

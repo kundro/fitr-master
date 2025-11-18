@@ -22,6 +22,7 @@ namespace Server.Application.Mappers
                 Aliases = item.Aliases?.Select(x => x.MapToFlowAliasOutputModel()),
                 Nodes = item.FlowNodes?.Select(x => x.Node.MapToFlowNodeOutputModel(x)),
                 Connectors = item.Connectors.Select(x => x.MapToFlowConnectorOutputModel()),
+                SubFlows = item.SubFlows?.Select(x => x.MapToFlowSubFlowOutputModel()),
             };
         }
 
@@ -82,6 +83,7 @@ namespace Server.Application.Mappers
                 IsActive = item.IsActive,
                 Command = item.Command,
                 CommandType = item.CommandType,
+                FlowSubFlowId = flowNode?.FlowSubFlowId,
                 InputPins = item.Pins?.Where(x => x.Direction == PinDirection.Input)
                     .Select(x => x.MapToFlowPinOutputModel(
                         flowNode?.PinValues?.FirstOrDefault(p => x.Id == p.PinId))),
@@ -141,6 +143,26 @@ namespace Server.Application.Mappers
                 Direction = item.Direction,
                 ValueType = item.ValueType,
                 PinValueIds = item.PinValueAliases?.Select(x => x.PinValueId)
+            };
+
+            return res;
+        }
+
+        public static FlowSubFlowOutputModel MapToFlowSubFlowOutputModel(this FlowSubFlow item)
+        {
+            if (item == null)
+                return null;
+
+            var res = new FlowSubFlowOutputModel
+            {
+                Id = item.Id,
+                ParentFlowId = item.ParentFlowId,
+                SubFlowId = item.SubFlowId,
+                GroupId = item.GroupId,
+                GroupName = item.GroupName,
+                IsCollapsed = item.IsCollapsed,
+                PositionX = item.PositionX,
+                PositionY = item.PositionY
             };
 
             return res;

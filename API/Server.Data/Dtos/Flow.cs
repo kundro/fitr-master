@@ -13,5 +13,6 @@ namespace Server.Data.Dtos
         public ICollection<Alias> Aliases { get; set; }
         public ICollection<FlowNode> FlowNodes { get; set; }
         public ICollection<Connector> Connectors { get; set; }
+        public ICollection<FlowSubFlow> SubFlows { get; set; }
     }
 }

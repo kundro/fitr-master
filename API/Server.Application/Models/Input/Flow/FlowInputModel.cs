@@ -9,6 +9,7 @@ namespace Server.Application.Models.Input.Flow
         public IEnumerable<FlowAliasInputModel> Aliases { get; set; }
         public IEnumerable<FlowNodeInputModel> FlowNodes { get; set; }
         public IEnumerable<FlowConnectorInputModel> Connectors { get; set; }
+        public IEnumerable<FlowSubFlowInputModel> SubFlows { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
     }

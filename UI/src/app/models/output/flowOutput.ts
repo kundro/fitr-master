@@ -8,6 +8,7 @@ export interface IFlowOutputModel {
   aliases: IAliasOutputModel[];
   nodes: IFlowNodeOutputModel[];
   connectors: IConnectorOutputModel[];
+  subFlows: IFlowSubFlowOutputModel[];
   x: number;
   y: number;
 }
@@ -22,6 +23,8 @@ export interface IFlowNodeOutputModel {
   isActive: boolean;
   commandType: NodeCommandType;
   command: string;
+  subFlowId?: number;
+  flowSubFlowId?: number;
   inputPins: IPinValueOutputModel[];
   outputPins: IPinValueOutputModel[];
 }
@@ -63,6 +66,17 @@ export interface IConnectorOutputModel {
   id: number;
   startPinValueId: number;
   endPinValueId: number;
+}
+
+export interface IFlowSubFlowOutputModel {
+  id: number;
+  parentFlowId: number;
+  subFlowId: number;
+  groupId: string;
+  groupName: string;
+  isCollapsed: boolean;
+  positionX: number;
+  positionY: number;
 }
 
 export interface IFlowsAsTasksListItemOutputModel {

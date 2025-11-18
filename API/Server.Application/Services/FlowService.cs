@@ -21,19 +21,22 @@ namespace Server.Application.Services
         private readonly INodeRepository _nodeRepository;
         private readonly IConnectorRepository _connectorRepository;
         private readonly IAliasRepository _aliasRepository;
+        private readonly IFlowSubFlowRepository _flowSubFlowRepository;
 
         public FlowService(
             IFlowRepository flowRepository,
             IPlatformRepository platformRepository,
             INodeRepository nodeRepository,
             IConnectorRepository connectorRepository,
-            IAliasRepository aliasRepository)
+            IAliasRepository aliasRepository,
+            IFlowSubFlowRepository flowSubFlowRepository)
         {
             _flowRepository = flowRepository;
             _platformRepository = platformRepository;
             _nodeRepository = nodeRepository;
             _connectorRepository = connectorRepository;
             _aliasRepository = aliasRepository;
+            _flowSubFlowRepository = flowSubFlowRepository;
         }
 
         public async Task<FlowOutputModel> GetFlowAsync(int id)
@@ -47,6 +50,7 @@ namespace Server.Application.Services
                     .Include(x => x.Aliases)
                         .ThenInclude(x => x.PinValueAliases)
                     .Include(x => x.Connectors)
+                    .Include(x => x.SubFlows)
                         );
 
             return res?.MapToFlowOutputModel();
@@ -116,11 +120,21 @@ namespace Server.Application.Services
                     await _flowRepository.AddAsync(dto);
 
                     var pinValues = dto.FlowNodes.SelectMany(x => x.PinValues);
-                    var connectors = model.Connectors.Select(x => x.MapToConnector(dto.Id, pinValues)).ToList();
-                    var aliases = model.Aliases.Select(x => x.MapToAlias(dto.Id, pinValues)).ToList();
+                    var connectors = model.Connectors?.Select(x => x.MapToConnector(dto.Id, pinValues)).ToList() ?? new List<Data.Dtos.Connector>();
+                    var aliases = model.Aliases?.Select(x => x.MapToAlias(dto.Id, pinValues)).ToList() ?? new List<Data.Dtos.Alias>();
+                    var subFlows = model.SubFlows?.Where(x => x != null).Select(x => 
+                    {
+                        var subFlow = x.MapToFlowSubFlow();
+                        subFlow.ParentFlowId = dto.Id;
+                        return subFlow;
+                    }).ToList() ?? new List<Data.Dtos.FlowSubFlow>();
 
-                    await _connectorRepository.AddRangeAsync(connectors);
-                    await _aliasRepository.AddRangeAsync(aliases);
+                    if (connectors.Any())
+                        await _connectorRepository.AddRangeAsync(connectors);
+                    if (aliases.Any())
+                        await _aliasRepository.AddRangeAsync(aliases);
+                    if (subFlows.Any())
+                        await _flowSubFlowRepository.AddRangeAsync(subFlows);
                     await _flowRepository.CommitTransactionAsync();
                 }
                 catch

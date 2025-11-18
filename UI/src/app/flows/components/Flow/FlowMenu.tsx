@@ -14,6 +14,7 @@ import api from "../../../api";
 import FlowSettings from "./FlowMenu/FlowSettings";
 import NodeSettings from "./FlowMenu/NodeSettings";
 import ConnectorSettings from "./FlowMenu/ConnectorSettings";
+import FlowGroupsPanel from "./FlowMenu/FlowGroupsPanel";
 import { IPinValueOutputModel } from "../../../models/output/flowOutput";
 import {
   NodeCommandType,
@@ -38,6 +39,7 @@ import {
 export interface IFlowMenuProps {
   flow: IFlowObservable;
   selection: ObservableValue<IFlowSelection>;
+  onToggleFlowGroup?: (groupId: string) => void;
 }
 
 let oldVersionsIds: number[];
@@ -256,7 +258,7 @@ const mapFlowToInput = (flow: IFlowObservable): IFlowInputModel => {
   };
 };
 
-export function FlowMenu({ flow, selection }: IFlowMenuProps): JSX.Element {
+export function FlowMenu({ flow, selection, onToggleFlowGroup }: IFlowMenuProps): JSX.Element {
   const history = useHistory();
 
   const onNodeDelete = (node: INodeObservable) => {
@@ -358,6 +360,12 @@ export function FlowMenu({ flow, selection }: IFlowMenuProps): JSX.Element {
         <div className="card-body" style={cardBodyStyle}>
           {selection.value.flow !== undefined && (
             <FlowSettings name={flow.name} isActive={flow.isActive} />
+          )}
+          {onToggleFlowGroup && (
+            <FlowGroupsPanel 
+              flow={flow} 
+              onToggleGroup={onToggleFlowGroup} 
+            />
           )}
           {!!selection.value.node && (
             <NodeSettings

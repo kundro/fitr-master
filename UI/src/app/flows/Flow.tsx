@@ -23,7 +23,7 @@ import {
 } from "../models/common";
 import api from "../api";
 import newGuid from "../../utils/guid";
-import { PinDirection } from "../models/enums";
+import { PinDirection, NodeCommandType } from "../models/enums";
 
 interface IFlowParams {
   id: number;
@@ -42,7 +42,21 @@ export interface IFlowObservable {
   isActive: ObservableValue<boolean>;
   nodes: ObservableValue<INodeObservable[]>;
   connectors: ObservableValue<ObservableValue<IConnectorObservable>[]>;
+  flowGroups: ObservableValue<IFlowGroupObservable[]>;
   position: IPosition;
+}
+
+export interface IFlowGroupObservable {
+  id: string;
+  flowId: number;
+  flowName: string;
+  isCollapsed: ObservableValue<boolean>;
+  nodes: INodeObservable[];
+  internalConnectors: ObservableValue<IConnectorObservable>[];
+  externalConnectors: ObservableValue<IConnectorObservable>[];
+  collapsedNode?: INodeObservable;
+  position: { x: number; y: number };
+  color?: string;
 }
 
 export interface IConnectorObservable {
@@ -54,6 +68,9 @@ export interface IConnectorObservable {
 export interface INodeObservable {
   model: ObservableValue<IFlowNodeOutputModel>;
   connectors: ObservableValue<IConnectorObservable>[];
+  flowGroupId?: string;
+  groupColor?: string;
+  isFlowProxy?: boolean;
 }
 
 export interface IPinObservable {
@@ -75,6 +92,7 @@ export default function Flow({ id }: IFlowParams) {
     connectors: new ObservableValue<ObservableValue<IConnectorObservable>[]>(
       []
     ),
+    flowGroups: new ObservableValue<IFlowGroupObservable[]>([]),
     position: { x: 0, y: 0 },
   };
 
@@ -127,9 +145,11 @@ export default function Flow({ id }: IFlowParams) {
       success: (response) => {
         updateKeys(response.nodes);
 
-        const connectors: ObservableValue<IConnectorObservable>[] = [];
-
+        // Create and add the flow group
         updateAddedFlowObservable(response);
+
+        // Handle connectors for the added flow
+        const connectors: ObservableValue<IConnectorObservable>[] = [];
 
         response.connectors.forEach((connector) => {
           const startNode = flow.nodes.value.find((x) =>
@@ -153,30 +173,29 @@ export default function Flow({ id }: IFlowParams) {
           );
 
           if (startPin && startNode && endPin && endNode) {
-            const connector = new ObservableValue<IConnectorObservable>({
-              key: newGuid(),
-              startPin: { model: startPin, node: startNode },
-              endPin: { model: endPin, node: endNode },
-            });
+            const connectorObservable =
+              new ObservableValue<IConnectorObservable>({
+                key: newGuid(),
+                startPin: { model: startPin, node: startNode },
+                endPin: { model: endPin, node: endNode },
+              });
 
             startPin.connections = startPin.connections
-              ? [...startPin.connections, connector.value.key]
-              : [connector.value.key];
-            startNode.connectors.push(connector);
+              ? [...startPin.connections, connectorObservable.value.key]
+              : [connectorObservable.value.key];
+            startNode.connectors.push(connectorObservable);
 
             endPin.connections = endPin.connections
-              ? [...endPin.connections, connector.value.key]
-              : [connector.value.key];
-            endNode.connectors.push(connector);
+              ? [...endPin.connections, connectorObservable.value.key]
+              : [connectorObservable.value.key];
+            endNode.connectors.push(connectorObservable);
 
-            connectors.push(connector);
+            connectors.push(connectorObservable);
           }
         });
 
-        connectors.forEach(connector => {
-          flow.connectors.value = [...flow.connectors.value, connector];
-        })
-
+        // Add connectors to the flow
+        flow.connectors.value = [...flow.connectors.value, ...connectors];
         flow.nodes.value = [...flow.nodes.value];
       },
     });
@@ -224,23 +243,350 @@ export default function Flow({ id }: IFlowParams) {
     }));
     onDrag({ x: model.x, y: model.y });
 
+    // Load flow groups if they exist
+    loadFlowGroups(model);
+
     selection.value = { flow: flow.id };
   };
 
   const updateAddedFlowObservable = (model: IFlowOutputModel) => {
-    const addedNodes = model.nodes.map<INodeObservable>((x) => ({
-      model: new ObservableValue(x),
-      connectors: [],
-    }));
-    onDrag({ x: model.x, y: model.y });
+    // Create a flow group for the added flow
+    const flowGroup = createFlowGroup(model);
 
-    addedNodes.forEach(node => {
-      if(node.model.value.nodeId !== 1 && node.model.value.nodeId !== 2){
-        flow.nodes.value = [...flow.nodes.value, node];
-      } 
-    })
+    // Add the flow group to the list
+    flow.flowGroups.value = [...flow.flowGroups.value, flowGroup];
+
+    // Add all nodes from the group (starts in expanded state)
+    flow.nodes.value = [...flow.nodes.value, ...flowGroup.nodes];
+
+    // Add all internal connectors from the group
+    flow.connectors.value = [
+      ...flow.connectors.value,
+      ...flowGroup.internalConnectors,
+    ];
+
+    // Auto-save the flow with new subflow relationship
+    saveFlowGroups();
 
     selection.value = { flow: flow.id };
+  };
+
+  // Generate different colors for flow groups
+  const getGroupColor = (groupIndex: number): string => {
+    const colors = [
+      "#8e44ad",
+      "#3498db",
+      "#e74c3c",
+      "#f39c12",
+      "#27ae60",
+      "#9b59b6",
+      "#34495e",
+      "#e67e22",
+    ];
+    return colors[groupIndex % colors.length];
+  };
+
+  const createFlowGroup = (
+    addedFlow: IFlowOutputModel
+  ): IFlowGroupObservable => {
+    const groupId = newGuid();
+    const groupIndex = flow.flowGroups.value.length;
+
+    const addedNodes = addedFlow.nodes
+      .filter((node) => node.nodeId !== 1 && node.nodeId !== 2) // Exclude input/output nodes
+      .map<INodeObservable>((x) => ({
+        model: new ObservableValue(x),
+        connectors: [],
+        flowGroupId: groupId,
+      }));
+
+    // Create internal connectors (connections between nodes within the group)
+    const internalConnectors: ObservableValue<IConnectorObservable>[] = [];
+
+    addedFlow.connectors.forEach((connectorData) => {
+      // Check if both start and end pins belong to nodes in this group
+      const startNodeId = addedFlow.nodes.find(
+        (n) =>
+          n.inputPins.some((p) => p.id === connectorData.startPinValueId) ||
+          n.outputPins.some((p) => p.id === connectorData.startPinValueId)
+      )?.nodeId;
+      const endNodeId = addedFlow.nodes.find(
+        (n) =>
+          n.inputPins.some((p) => p.id === connectorData.endPinValueId) ||
+          n.outputPins.some((p) => p.id === connectorData.endPinValueId)
+      )?.nodeId;
+
+      // Include connector if both nodes are in the group (not input/output nodes)
+      if (
+        startNodeId &&
+        endNodeId &&
+        startNodeId !== 1 &&
+        startNodeId !== 2 &&
+        endNodeId !== 1 &&
+        endNodeId !== 2
+      ) {
+        // Find start and end pins in the added nodes
+        const startPin = addedNodes
+          .flatMap((node) => [
+            ...node.model.value.inputPins.map((pin) => ({ pin, node })),
+            ...node.model.value.outputPins.map((pin) => ({ pin, node })),
+          ])
+          .find((p) => p.pin.id === connectorData.startPinValueId);
+
+        const endPin = addedNodes
+          .flatMap((node) => [
+            ...node.model.value.inputPins.map((pin) => ({ pin, node })),
+            ...node.model.value.outputPins.map((pin) => ({ pin, node })),
+          ])
+          .find((p) => p.pin.id === connectorData.endPinValueId);
+
+        if (startPin && endPin) {
+          const connectorObservable = new ObservableValue<IConnectorObservable>(
+            {
+              key: newGuid(),
+              startPin: { model: startPin.pin, node: startPin.node },
+              endPin: { model: endPin.pin, node: endPin.node },
+            }
+          );
+
+          // Update pin connections
+          startPin.pin.connections = startPin.pin.connections
+            ? [...startPin.pin.connections, connectorObservable.value.key]
+            : [connectorObservable.value.key];
+          startPin.node.connectors.push(connectorObservable);
+
+          endPin.pin.connections = endPin.pin.connections
+            ? [...endPin.pin.connections, connectorObservable.value.key]
+            : [connectorObservable.value.key];
+          endPin.node.connectors.push(connectorObservable);
+
+          internalConnectors.push(connectorObservable);
+        }
+      }
+    });
+
+    // Calculate group position (center of nodes)
+    const groupX =
+      addedNodes.length > 0
+        ? addedNodes.reduce((sum, node) => sum + node.model.value.x, 0) /
+          addedNodes.length
+        : 0;
+    const groupY =
+      addedNodes.length > 0
+        ? addedNodes.reduce((sum, node) => sum + node.model.value.y, 0) /
+          addedNodes.length
+        : 0;
+
+    return {
+      id: groupId,
+      flowId: addedFlow.id,
+      flowName: addedFlow.name,
+      isCollapsed: new ObservableValue(false),
+      nodes: addedNodes,
+      internalConnectors: internalConnectors,
+      externalConnectors: [],
+      position: { x: groupX, y: groupY },
+      color: getGroupColor(groupIndex),
+    };
+  };
+
+  const toggleFlowGroup = (groupId: string) => {
+    const group = flow.flowGroups.value.find((g) => g.id === groupId);
+    if (!group) return;
+
+    if (group.isCollapsed.value) {
+      // Expand: Remove proxy node, add all group nodes
+      if (group.collapsedNode) {
+        flow.nodes.value = flow.nodes.value.filter(
+          (n) => n !== group.collapsedNode
+        );
+        group.collapsedNode = undefined;
+      }
+
+      // Add all group nodes back
+      flow.nodes.value = [...flow.nodes.value, ...group.nodes];
+
+      // Restore internal connectors
+      flow.connectors.value = [
+        ...flow.connectors.value,
+        ...group.internalConnectors,
+      ];
+
+      group.isCollapsed.value = false;
+    } else {
+      // Collapse: Remove all group nodes, add single proxy node
+      flow.nodes.value = flow.nodes.value.filter(
+        (n) => !group.nodes.includes(n)
+      );
+
+      // Remove internal connectors and store them
+      const internalConnectorKeys = new Set<string>();
+      group.nodes.forEach((node) => {
+        node.connectors.forEach((conn) => {
+          const startInGroup = group.nodes.some((n) =>
+            n.model.value.outputPins.some(
+              (p) => p.id === conn.value.startPin.model.id
+            )
+          );
+          const endInGroup = group.nodes.some((n) =>
+            n.model.value.inputPins.some(
+              (p) => p.id === conn.value.endPin.model.id
+            )
+          );
+          if (startInGroup && endInGroup) {
+            internalConnectorKeys.add(conn.value.key);
+          }
+        });
+      });
+
+      // Store internal connectors
+      group.internalConnectors = flow.connectors.value.filter((conn) =>
+        internalConnectorKeys.has(conn.value.key)
+      );
+
+      // Remove internal connectors from main flow
+      flow.connectors.value = flow.connectors.value.filter(
+        (conn) => !internalConnectorKeys.has(conn.value.key)
+      );
+
+      // Create proxy node
+      const proxyNode: INodeObservable = {
+        model: new ObservableValue({
+          key: newGuid(),
+          id: -group.flowId, // Negative ID to distinguish from real nodes
+          nodeId: -group.flowId,
+          name: group.flowName,
+          x: group.position.x,
+          y: group.position.y,
+          isActive: true,
+          commandType: NodeCommandType.Command,
+          command: "SUBFLOW",
+          inputPins: [], // Will be populated with external connections
+          outputPins: [], // Will be populated with external connections
+        }),
+        connectors: [],
+        flowGroupId: groupId,
+        isFlowProxy: true,
+      };
+
+      group.collapsedNode = proxyNode;
+      flow.nodes.value = [...flow.nodes.value, proxyNode];
+
+      group.isCollapsed.value = true;
+    }
+
+    // Trigger UI update
+    flow.nodes.value = [...flow.nodes.value];
+    flow.connectors.value = [...flow.connectors.value];
+
+    // Auto-save after toggle
+    saveFlowGroups();
+  };
+
+  const saveFlowGroups = () => {
+    if (flow.id === 0) return; // Don't save template flows
+
+    const flowData = {
+      id: flow.id,
+      name: flow.name.value,
+      isActive: flow.isActive.value,
+      x: flow.position.x,
+      y: flow.position.y,
+      aliases: [], // Will be populated by existing save logic
+      flowNodes: flow.nodes.value.map((node) => ({
+        id: node.model.value.id,
+        nodeId: node.model.value.nodeId,
+        name: node.model.value.name,
+        x: node.model.value.x,
+        y: node.model.value.y,
+        subFlowId: node.model.value.subFlowId,
+        flowSubFlowId: node.model.value.flowSubFlowId,
+        pinValues: [], // Will be populated by existing save logic
+      })),
+      connectors: [], // Will be populated by existing save logic
+      subFlows: flow.flowGroups.value.map((group) => ({
+        id: 0, // Let backend assign ID
+        subFlowId: group.flowId,
+        groupId: group.id,
+        groupName: group.flowName,
+        isCollapsed: group.isCollapsed.value,
+        positionX: group.position.x,
+        positionY: group.position.y,
+      })),
+    };
+
+    // Use existing PUT API to save flow with subflows
+    api.flow.put(flowData, {
+      success: () => {
+        console.log("Flow groups saved successfully");
+      },
+      error: (error) => {
+        console.error("Failed to save flow groups:", error);
+      },
+    });
+  };
+
+  const loadFlowGroups = (flowData: IFlowOutputModel) => {
+    if (!flowData.subFlows || flowData.subFlows.length === 0) return;
+
+    const loadedGroups: IFlowGroupObservable[] = [];
+
+    flowData.subFlows.forEach((subFlowData) => {
+      // Find nodes that belong to this subflow group
+      const groupNodes = flow.nodes.value.filter(
+        (node) => node.model.value.flowSubFlowId === subFlowData.id
+      );
+
+      const flowGroup: IFlowGroupObservable = {
+        id: subFlowData.groupId,
+        flowId: subFlowData.subFlowId,
+        flowName: subFlowData.groupName,
+        isCollapsed: new ObservableValue(subFlowData.isCollapsed),
+        nodes: groupNodes,
+        internalConnectors: [],
+        externalConnectors: [],
+        position: { x: subFlowData.positionX, y: subFlowData.positionY },
+      };
+
+      // Set group ID on nodes
+      groupNodes.forEach((node) => {
+        node.flowGroupId = subFlowData.groupId;
+      });
+
+      // If collapsed, create proxy node
+      if (subFlowData.isCollapsed) {
+        const proxyNode: INodeObservable = {
+          model: new ObservableValue({
+            key: newGuid(),
+            id: -subFlowData.subFlowId,
+            nodeId: -subFlowData.subFlowId,
+            name: subFlowData.groupName,
+            x: subFlowData.positionX,
+            y: subFlowData.positionY,
+            isActive: true,
+            commandType: NodeCommandType.Command,
+            command: "SUBFLOW",
+            inputPins: [],
+            outputPins: [],
+          }),
+          connectors: [],
+          flowGroupId: subFlowData.groupId,
+          isFlowProxy: true,
+        };
+
+        flowGroup.collapsedNode = proxyNode;
+
+        // Remove group nodes from main flow and add proxy
+        flow.nodes.value = flow.nodes.value.filter(
+          (n) => !groupNodes.includes(n)
+        );
+        flow.nodes.value = [...flow.nodes.value, proxyNode];
+      }
+
+      loadedGroups.push(flowGroup);
+    });
+
+    flow.flowGroups.value = loadedGroups;
   };
 
   const loadFlow = () => {
@@ -431,7 +777,11 @@ export default function Flow({ id }: IFlowParams) {
                   />
                 </div>
 
-                <FlowMenu flow={flow} selection={selection} />
+                <FlowMenu
+                  flow={flow}
+                  selection={selection}
+                  onToggleFlowGroup={toggleFlowGroup}
+                />
               </div>
             );
           }}

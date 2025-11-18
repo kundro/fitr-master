@@ -20,6 +20,7 @@ namespace Server.Application.Mappers
                 Aliases = null,
                 Connectors = null,
                 FlowNodes = item.FlowNodes.Select(x => x.MapToFlowNode()).ToList(),
+                SubFlows = item.SubFlows?.Select(x => x.MapToFlowSubFlow()).ToList(),
                 X = item.X,
                 Y = item.Y,
             };
@@ -38,6 +39,8 @@ namespace Server.Application.Mappers
                 PinValues = item.PinValues.Select(x => x.MapToPinValue()).ToList(),
                 X = item.X,
                 Y = item.Y,
+                SubFlowId = null, // Set to null by default since it's not provided in input
+                FlowSubFlowId = item.FlowSubFlowId > 0 ? item.FlowSubFlowId : null, // Only set if positive value
             };
         }
 
@@ -103,6 +106,23 @@ namespace Server.Application.Mappers
                 FlowId = flowId,
                 StartPinValueId = startPinValue.Id,
                 EndPinValueId = endPinValue.Id
+            };
+        }
+
+        public static FlowSubFlow MapToFlowSubFlow(this FlowSubFlowInputModel item)
+        {
+            if (item == null)
+                return null;
+
+            return new FlowSubFlow
+            {
+                Id = item.Id,
+                SubFlowId = item.SubFlowId,
+                GroupId = item.GroupId,
+                GroupName = item.GroupName,
+                IsCollapsed = item.IsCollapsed,
+                PositionX = item.PositionX,
+                PositionY = item.PositionY
             };
         }
     }
