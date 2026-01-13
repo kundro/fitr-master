@@ -157,18 +157,13 @@ export default function TeacherDashboard() {
   return (
     <Navbar authPage={false}>
       <div className="container mt-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <h2 style={{ color: "white" }}>Teacher Dashboard</h2>
-            {user && (
-              <p style={{ color: "#ccc" }}>
-                Welcome, {user.firstName} {user.lastName}
-              </p>
-            )}
-          </div>
-          <Button color="secondary" onClick={handleLogout}>
-            Logout
-          </Button>
+        <div className="mb-4">
+          <h2 style={{ color: "white" }}>Teacher Dashboard</h2>
+          {user && (
+            <p style={{ color: "#ccc" }}>
+              Welcome, {user.firstName} {user.lastName}
+            </p>
+          )}
         </div>
 
         {error && <Alert color="danger">{error}</Alert>}
