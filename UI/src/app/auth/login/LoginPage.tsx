@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { Button, Card, Form, FormGroup, Label, Alert } from "reactstrap";
 import { Input } from "../../../utils/observable";
-import { api } from "../api";
 
 export default function LoginPage() {
   const history = useHistory();
