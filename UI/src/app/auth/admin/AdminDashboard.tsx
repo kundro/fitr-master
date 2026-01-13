@@ -202,11 +202,23 @@ export default function AdminDashboard() {
           )}
         </Card>
 
-        <div className="mt-4">
-          <Button color="primary" onClick={() => history.push("/flows")}>
-            Go to Flows
-          </Button>
-        </div>
+        <Card className="p-4 mt-4">
+          <h4 className="mb-3">Admin Access</h4>
+          <p className="text-muted mb-3">
+            As an administrator, you have full access to all system features:
+          </p>
+          <div className="d-flex gap-2">
+            <Button color="primary" onClick={() => history.push("/flows")}>
+              Manage Flows
+            </Button>
+            <Button color="primary" onClick={() => history.push("/runs")}>
+              View Runs
+            </Button>
+            <Button color="primary" onClick={() => history.push("/platforms")}>
+              Manage Platforms
+            </Button>
+          </div>
+        </Card>
       </div>
     </Navbar>
   );

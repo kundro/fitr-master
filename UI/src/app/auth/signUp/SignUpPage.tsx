@@ -66,15 +66,18 @@ export default function SignUpPage() {
       });
 
       const data = await response.json();
+      
+      // API returns data wrapped in "result"
+      const result = data.result || data;
 
       if (!response.ok) {
-        setError(data.message || "Registration failed");
+        setError(result.message || "Registration failed");
         setLoading(false);
         return;
       }
 
-      if (data.success) {
-        setSuccess(data.message);
+      if (result.success) {
+        setSuccess(result.message);
         setTimeout(() => {
           history.push("/login");
         }, 2000);
@@ -140,19 +143,26 @@ export default function SignUpPage() {
               </FormGroup>
             </div>
             <FormGroup>
-              <Label for="role">Role *</Label>
-              <BootstrapInput
+              <Label for="role">Role</Label>
+              <Input
                 type="select"
                 id="role"
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
                 required
+                style={{ 
+                  padding: "10px",
+                  fontSize: "14px",
+                  borderRadius: "4px",
+                  border: "1px solid #ced4da",
+                  backgroundColor: "white"
+                }}
               >
                 <option value="Student">Student</option>
                 <option value="Teacher">Teacher</option>
-              </BootstrapInput>
-              <small className="text-muted">
+              </Input>
+              <small className="text-muted mt-1" style={{ display: "block" }}>
                 {formData.role === "Teacher"
                   ? "Requires admin approval"
                   : "Requires teacher approval"}

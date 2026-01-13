@@ -78,11 +78,15 @@ export default function StudentDashboard() {
           </p>
         </Card>
 
-        <div className="mt-4">
-          <Button color="primary" onClick={() => history.push("/flows")}>
-            Go to Flows
+        <Card className="p-4 mt-4">
+          <h4 className="mb-3">Student Access</h4>
+          <p className="text-muted mb-3">
+            View your runs and submissions:
+          </p>
+          <Button color="primary" onClick={() => history.push("/runs")}>
+            View My Runs
           </Button>
-        </div>
+        </Card>
       </div>
     </Navbar>
   );

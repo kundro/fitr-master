@@ -154,6 +154,13 @@ export default function Header({ authPage }: { authPage?: boolean }) {
                 </a>
               </li>
             )}
+            {!authPage && user && (
+              <li className="nav-item">
+                <a className="nav-link" href="#" onClick={handleLogOut}>
+                  <span className="custom-link">LOGOUT</span>
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

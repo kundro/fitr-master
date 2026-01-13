@@ -27,20 +27,23 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+      
+      // API returns data wrapped in "result"
+      const result = data.result || data;
 
       if (!response.ok) {
-        setError(data.message || "Login failed");
+        setError(result.message || "Login failed");
         setLoading(false);
         return;
       }
 
-      if (data.success) {
+      if (result.success) {
         // Save token to localStorage
-        localStorage.setItem("authToken", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("authToken", result.token);
+        localStorage.setItem("user", JSON.stringify(result.user));
 
         // Redirect based on role
-        switch (data.user.role) {
+        switch (result.user.role) {
           case "Admin":
             history.push("/admin");
             break;
@@ -54,7 +57,7 @@ export default function LoginPage() {
             history.push("/flows");
         }
       } else {
-        setError(data.message);
+        setError(result.message);
       }
     } catch (err) {
       setError("Connection error. Please try again.");
