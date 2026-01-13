@@ -55,35 +55,83 @@ DB/Database/00_Master_CreateTables.sql
 - Connector, Alias, Platform
 - User, User_Role, Assignment, Assignment_Submission
 
-#### 1.3 Загрузите начальные данные (опционально)
+#### 1.3 Загрузите начальные данные
 ```sql
--- Если есть файлы в DB/Database/DataScripts/Initialize/
-:r DB/Database/DataScripts/Initialize/Platform.Data.sql
-:r DB/Database/DataScripts/Initialize/Node.Data.sql
-:r DB/Database/DataScripts/Initialize/Pin.Data.sql
+-- В SQL Server Management Studio откройте и выполните:
+:r c:\Other\fitr-master\01_Seed_Data_NEW.sql
 ```
 
-#### 1.4 Создайте Admin пользователя
-```sql
--- Сначала создайте роли
-INSERT INTO User_Role (Name, Description, AddSource)
-VALUES 
-    ('Admin', 'System administrator', 'System'),
-    ('Teacher', 'Educator who creates assignments', 'System'),
-    ('Student', 'Learner who completes assignments', 'System');
+Этот скрипт создаст:
+- **Роли**: Admin, Teacher, Student  
+- **Admin пользователь**: admin@fitr.com (нужно зарегистрировать через API!)
+- **Платформы**: System, Graphics
+- **Ноды**: Input, Output, String Equals, Not, Debug, Sum, Concat, Multiply, Or, And, Message, Number Equals, Task Point
+- **Пины**: 38 входов/выходов для всех нод
 
--- Создайте Admin пользователя (пароль: Admin123)
--- PasswordHash - это BCrypt hash пароля "Admin123"
-INSERT INTO [User] (Email, PasswordHash, FirstName, LastName, RoleId, IsApproved, AddSource)
-VALUES (
-    'admin@fitr.com',
-    '$2a$11$YourBCryptHashHere', -- НУЖНО СГЕНЕРИРОВАТЬ!
-    'System',
-    'Administrator',
-    (SELECT Id FROM User_Role WHERE Name = 'Admin'),
-    1,
-    'System'
-);
+**ВАЖНО:** Admin user нужно зарегистрировать через API (чтобы BCrypt сгенерировал правильный hash), затем вручную установить `IsApproved=1` в базе данных.
+
+#### 1.4 Создайте Admin пользователя
+
+Поскольку BCrypt hashing происходит в коде, admin нужно создать через API:
+
+**Шаг 1: Зарегистрируйте admin через API**
+```bash
+# Метод 1: С помощью Postman
+POST https://localhost:5001/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@fitr.com",
+  "password": "Admin123!",
+  "firstName": "System",
+  "lastName": "Administrator",
+  "roleName": "Admin"
+}
+
+# Метод 2: С помощью PowerShell
+$body = @{
+    email = "admin@fitr.com"
+    password = "Admin123!"
+    firstName = "System"
+    lastName = "Administrator"
+    roleName = "Admin"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "https://localhost:5001/api/auth/register" `
+    -Method Post `
+    -Body $body `
+    -ContentType "application/json" `
+    -SkipCertificateCheck
+```
+
+**Шаг 2: Approve admin вручную в базе данных**
+```sql
+UPDATE [User] 
+SET IsApproved = 1, 
+    ApprovedDate = GETDATE(),
+    ApprovedBy = (SELECT Id FROM [User] WHERE Email = 'admin@fitr.com')
+WHERE Email = 'admin@fitr.com';
+```
+
+**Шаг 3: Теперь можно войти**
+```bash
+POST https://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@fitr.com",
+  "password": "Admin123!"
+}
+
+# Ответ:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "userId": 1,
+  "email": "admin@fitr.com",
+  "firstName": "System",
+  "lastName": "Administrator",
+  "role": "Admin"
+}
 ```
 
 ---
