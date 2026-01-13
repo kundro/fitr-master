@@ -9,5 +9,6 @@ namespace Server.Application.Contracts
         Task<LoginOutputModel> LoginAsync(LoginInputModel model);
         Task<RegisterOutputModel> RegisterAsync(RegisterInputModel model);
         Task<UserOutputModel> GetCurrentUserAsync(int userId);
+        Task<RegisterOutputModel> InitializeAdminAsync(string password);
     }
 }

@@ -1,58 +1,125 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import { Button, Card, Form, FormGroup, Label } from "reactstrap";
+import { Button, Card, Form, FormGroup, Label, Alert } from "reactstrap";
 import { Input } from "../../../utils/observable";
+import { api } from "../api";
 
 export default function LoginPage() {
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Login failed");
+        setLoading(false);
+        return;
+      }
+
+      if (data.success) {
+        // Save token to localStorage
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Redirect based on role
+        switch (data.user.role) {
+          case "Admin":
+            history.push("/admin");
+            break;
+          case "Teacher":
+            history.push("/teacher");
+            break;
+          case "Student":
+            history.push("/student");
+            break;
+          default:
+            history.push("/flows");
+        }
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError("Connection error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Navbar authPage={true}>
       <div className="d-flex justify-content-center">
-        <Card className="p-4" style={{ width: "350px" }}>
+        <Card className="p-4" style={{ width: "400px" }}>
           <div
             className="pb-4"
-            style={{ textAlign: "center", fontWeight: 600 }}
+            style={{ textAlign: "center", fontWeight: 600, fontSize: "20px" }}
           >
             LOGIN
           </div>
-          <Form
-            onSubmit={() => {
-              alert("submit");
-            }}
-          >
+          {error && <Alert color="danger">{error}</Alert>}
+          <Form onSubmit={handleSubmit}>
             <FormGroup>
-              <Label for="name">Username</Label>
+              <Label for="email">Email</Label>
               <Input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Enter username"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e: any) => setEmail(e.target.value)}
+                required
               />
             </FormGroup>
             <FormGroup>
-              <Label for="author">Password</Label>
+              <Label for="password">Password</Label>
               <Input
                 type={passwordVisible ? "text" : "password"}
-                id="author"
-                name="author"
-                placeholder="Enter passsword"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e: any) => setPassword(e.target.value)}
+                required
               />
             </FormGroup>
             <FormGroup check>
               <Label>
                 <Input
                   type="checkbox"
-                  id="isActive"
-                  name="isActive"
+                  id="showPassword"
+                  name="showPassword"
                   onChange={() => setPasswordVisible(!passwordVisible)}
                 />
                 Show password
               </Label>
             </FormGroup>
-            <Button className="mt-3 w-100" type="submit">
-              LOGIN
+            <Button className="mt-3 w-100" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "LOGIN"}
             </Button>
+            <div className="text-center mt-3">
+              <span>Don't have an account? </span>
+              <a href="/signup" style={{ color: "#007bff" }}>
+                Sign Up
+              </a>
+            </div>
           </Form>
         </Card>
       </div>

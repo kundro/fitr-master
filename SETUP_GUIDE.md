@@ -61,7 +61,20 @@ FITR - это визуальная среда для создания и вып�
 Этот скрипт добавит:
 - **Колонку Color** в таблицу Flow_Node (для отображения цвета нод из subflows)
 
-#### 1.3 (Опционально) Добавьте роли
+#### 1.3 Добавьте таблицы авторизации
+```sql
+-- В SQL Server Management Studio откройте и выполните:
+:r c:\Other\fitr-master\ADD_AUTH_TABLES.sql
+```
+
+Этот скрипт создаст:
+- **Таблицы**: User_Role, User, Assignment, Assignment_Submission
+- **Роли**: Admin, Teacher, Student
+- **Админ пользователя**: admin@fitr.local / admin123
+
+⚠️ **ВАЖНО**: Измените пароль админа после первого входа!
+
+#### 1.4 (Опционально) Дополнительные роли
 ```sql
 -- Только если нужны роли для Auth системы:
 SET IDENTITY_INSERT [dbo].[User_Role] ON 

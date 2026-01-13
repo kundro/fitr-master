@@ -10,9 +10,20 @@ import { useHistory } from "react-router";
 export default function Header({ authPage }: { authPage?: boolean }) {
   const [open, setOpen] = useState(false);
   const [onHover, setOnHover] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const history = useHistory();
 
+  React.useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
   const handleLogOut = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    setUser(null);
     history.push("/login");
   };
 
@@ -27,24 +38,24 @@ export default function Header({ authPage }: { authPage?: boolean }) {
 
   const UserDialogTitle = "Profile";
 
-  const UserDialogContent = (
+  const UserDialogContent = user ? (
     <div className="d-flex">
       <div className="mr-3">
         <p>User Information</p>
         <div>
           <span style={{ color: "grey", fontSize: "14px" }}>Name:</span>
           &nbsp;
-          {"Test Subtest"}
+          {user.firstName} {user.lastName}
         </div>
         <div>
           <span style={{ color: "grey", fontSize: "14px" }}>Email:</span>
           &nbsp;
-          {"Test@test.te"}
+          {user.email}
         </div>
         <div>
-          <span style={{ color: "grey", fontSize: "14px" }}>Phone Number:</span>
+          <span style={{ color: "grey", fontSize: "14px" }}>Status:</span>
           &nbsp;
-          {"+1002223344"}
+          {user.isApproved ? "Approved" : "Pending Approval"}
         </div>
       </div>
       <div
@@ -55,20 +66,22 @@ export default function Header({ authPage }: { authPage?: boolean }) {
         }}
       ></div>
       <div className="pl-3">
-        <p>User Group</p>
+        <p>User Role</p>
         <div>
-          <span style={{ color: "grey", fontSize: "14px" }}>Group Name:</span>
+          <span style={{ color: "grey", fontSize: "14px" }}>Role:</span>
           &nbsp;
-          {"Student"}
+          {user.role}
         </div>
       </div>
     </div>
+  ) : (
+    <div>Please log in</div>
   );
 
   const UserDialogButtons = (
     <>
-      <Button onClick={handleClose} color="warning">
-        Reset Password
+      <Button onClick={handleClose} color="primary">
+        Close
       </Button>
       <Button onClick={handleLogOut} color="error">
         Log Out
@@ -118,7 +131,7 @@ export default function Header({ authPage }: { authPage?: boolean }) {
                 <span className="custom-link">HELP</span>
               </a>
             </li>
-            {!authPage && (
+            {!authPage && user && (
               <li
                 className="nav-item"
                 onMouseMove={() => setOnHover(true)}
@@ -131,6 +144,13 @@ export default function Header({ authPage }: { authPage?: boolean }) {
                     size="2xl"
                     className="user-icon"
                   />
+                </a>
+              </li>
+            )}
+            {!authPage && !user && (
+              <li className="nav-item">
+                <a className="nav-link" href="/login">
+                  <span className="custom-link">LOGIN</span>
                 </a>
               </li>
             )}

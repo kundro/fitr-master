@@ -156,6 +156,42 @@ namespace Server.Application.Services
             };
         }
 
+        public async Task<RegisterOutputModel> InitializeAdminAsync(string password)
+        {
+            var admin = (await _userRepository.GetAllAsync(
+                null,
+                null,
+                predicate: u => u.Email == "admin@fitr.local"
+            )).Items.FirstOrDefault();
+
+            if (admin == null)
+            {
+                return new RegisterOutputModel
+                {
+                    Success = false,
+                    Message = "Admin user not found. Run ADD_AUTH_TABLES.sql first."
+                };
+            }
+
+            if (admin.PasswordHash != "TEMPORARY_HASH_UPDATE_VIA_API")
+            {
+                return new RegisterOutputModel
+                {
+                    Success = false,
+                    Message = "Admin password already initialized."
+                };
+            }
+
+            admin.PasswordHash = HashPassword(password);
+            await _userRepository.UpdateAsync(admin);
+
+            return new RegisterOutputModel
+            {
+                Success = true,
+                Message = "Admin password initialized successfully. You can now login."
+            };
+        }
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);

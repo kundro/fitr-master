@@ -56,5 +56,21 @@ namespace Server.Api.Controllers
 
             return Ok(user);
         }
+
+        [HttpPost("init-admin")]
+        public async Task<IActionResult> InitializeAdmin([FromBody] InitAdminInputModel model)
+        {
+            var result = await _authService.InitializeAdminAsync(model.Password);
+            
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
     }
+}
+
+public class InitAdminInputModel
+{
+    public string Password { get; set; }
 }
