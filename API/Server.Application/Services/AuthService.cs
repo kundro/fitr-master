@@ -183,7 +183,7 @@ namespace Server.Application.Services
             }
 
             admin.PasswordHash = HashPassword(password);
-            await _userRepository.UpdateAsync(admin);
+            await _userRepository.UpdateAsync(admin, admin.Id);
 
             return new RegisterOutputModel
             {
@@ -192,12 +192,12 @@ namespace Server.Application.Services
             };
         }
 
-        private string HashPassword(string password)
+        private static static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        private bool VerifyPassword(string password, string hash)
+        private static bool VerifyPassword(string password, string hash)
         {
             return BCrypt.Net.BCrypt.Verify(password, hash);
         }
