@@ -38,6 +38,7 @@ namespace Server.Application.Mappers
                 PinValues = item.PinValues.Select(x => x.MapToPinValue()).ToList(),
                 X = item.X,
                 Y = item.Y,
+                Color = item.Color,
             };
         }
 

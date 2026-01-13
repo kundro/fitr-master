@@ -79,6 +79,7 @@ namespace Server.Application.Mappers
                 Name = flowNode?.Name ?? item.Name,
                 X = flowNode?.X ?? 0,
                 Y = flowNode?.Y ?? 0,
+                Color = flowNode?.Color,
                 IsActive = item.IsActive,
                 Command = item.Command,
                 CommandType = item.CommandType,

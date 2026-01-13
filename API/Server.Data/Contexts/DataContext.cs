@@ -65,6 +65,58 @@ namespace Server.Data.Contexts
             {
                 x.ToTable("Connector");
             });
+
+            modelBuilder.Entity<ApplicationUser>(x =>
+            {
+                x.ToTable("User");
+                
+                x.HasOne(u => u.Role)
+                    .WithMany(r => r.Users)
+                    .HasForeignKey(u => u.RoleId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                x.HasOne(u => u.ApprovedByUser)
+                    .WithMany()
+                    .HasForeignKey(u => u.ApprovedBy)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<UserRole>(x =>
+            {
+                x.ToTable("User_Role");
+            });
+
+            modelBuilder.Entity<Assignment>(x =>
+            {
+                x.ToTable("Assignment");
+                
+                x.HasOne(a => a.Teacher)
+                    .WithMany(u => u.CreatedAssignments)
+                    .HasForeignKey(a => a.TeacherId)
+                    .OnDelete(DeleteBehavior.NoAction);
+                    
+                x.HasOne(a => a.Flow)
+                    .WithMany()
+                    .HasForeignKey(a => a.FlowId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AssignmentSubmission>(x =>
+            {
+                x.ToTable("Assignment_Submission");
+                
+                x.HasOne(s => s.Assignment)
+                    .WithMany(a => a.Submissions)
+                    .HasForeignKey(s => s.AssignmentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                    
+                x.HasOne(s => s.Student)
+                    .WithMany(u => u.Submissions)
+                    .HasForeignKey(s => s.StudentId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
         }
 
         public DbSet<Node> Nodes { get; set; }
@@ -76,5 +128,9 @@ namespace Server.Data.Contexts
         public DbSet<Flow> Flows { get; set; }
         public DbSet<FlowNode> FlowNodes { get; set; }
         public DbSet<Connector> Connectors { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
     }
 }

@@ -41,7 +41,11 @@ namespace Server.Api.DI
             return services
                 .AddScoped<IPlatformService, PlatformService>()
                 .AddScoped<IRunService, RunService>()
-                .AddScoped<IFlowService, FlowService>();
+                .AddScoped<IFlowService, FlowService>()
+                .AddScoped<IAuthService, AuthService>()
+                .AddScoped<IAdminService, AdminService>()
+                .AddScoped<ITeacherService, TeacherService>()
+                .AddScoped<IStudentService, StudentService>();
         }
 
         public static IServiceCollection ConfigureRepositories(this IServiceCollection services)
@@ -53,7 +57,11 @@ namespace Server.Api.DI
                 .AddScoped<INodeRepository, NodeRepository>()
                 .AddScoped<IPinRepository, PinRepository>()
                 .AddScoped<IConnectorRepository, ConnectorRepository>()
-                .AddScoped<IAliasRepository, AliasRepository>();
+                .AddScoped<IAliasRepository, AliasRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IUserRoleRepository, UserRoleRepository>()
+                .AddScoped<IAssignmentRepository, AssignmentRepository>()
+                .AddScoped<IAssignmentSubmissionRepository, AssignmentSubmissionRepository>();
         }
 
         public static IServiceCollection ConfigureContexts(this IServiceCollection services, IConfiguration configuration)

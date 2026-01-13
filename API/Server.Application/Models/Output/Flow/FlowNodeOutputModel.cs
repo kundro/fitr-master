@@ -12,6 +12,7 @@ namespace Server.Application.Models.Output.Flow
         public string Command { get; set; }
         public int? X { get; set; }
         public int? Y { get; set; }
+        public string Color { get; set; }
         public IEnumerable<FlowPinOutputModel> InputPins { get; set; }
         public IEnumerable<FlowPinOutputModel> OutputPins { get; set; }
     }
