@@ -26,6 +26,7 @@ export interface IFlowNodeInputModel {
   pinValues: IPinValueInputModel[];
   x: number;
   y: number;
+  color?: string;
 }
 
 export interface IPinValueInputModel {

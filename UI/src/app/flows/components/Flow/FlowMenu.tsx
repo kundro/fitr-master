@@ -227,6 +227,7 @@ const mapFlowToInput = (flow: IFlowObservable): IFlowInputModel => {
         name: node.name,
         x: Math.round(node.x),
         y: Math.round(node.y),
+        color: node.color,
         pinValues: pinValues,
       };
     });

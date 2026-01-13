@@ -96,6 +96,9 @@ export default function Node({
               className={classNames("card node d-flex flex-column noselect", {
                 "node-selected": selected,
               })}
+              style={{
+                backgroundColor: observer.model.color || "transparent",
+              }}
             >
               <div className="d-flex flex-row justify-content-between">
                 {(inputPin && (

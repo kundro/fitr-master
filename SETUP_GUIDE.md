@@ -36,50 +36,32 @@ FITR - это визуальная среда для создания и вып�
 
 ### Шаг 1: Подготовка базы данных
 
-#### 1.1 Создайте новую базу данных
-```sql
-CREATE DATABASE FITR;
-GO
-USE FITR;
-GO
-```
-
-#### 1.2 Запустите мастер-скрипт создания таблиц
-```sql
--- В SQL Server Management Studio откройте и выполните:
-:r c:\Other\fitr-master\DB\Database\00_Master_CreateTables.sql
-```
-
-Этот скрипт создаст ВСЕ таблицы:
-- Flow, Flow_Node, Node, Pin, PinValue
-- Connector, Alias, Platform
-- User, User_Role, Assignment, Assignment_Submission
-
-#### 1.3 Загрузите базовые данные (Platform, Node, Pin и т.д.)
+#### 1.1 Запустите основной скрипт базы данных
 ```sql
 -- В SQL Server Management Studio откройте и выполните:
 :r c:\Other\fitr-master\script2.sql
 ```
 
 Этот скрипт создаст:
+- **База данных**: Splate (можно переименовать в FITR при необходимости)
+- **Все таблицы**: Flow, Flow_Node, Node, Pin, PinValue, Connector, Alias, Platform
 - **Платформы**: System, Graphics, Test, New (4 платформы)
 - **Ноды**: Input, Output, String Equals, Not, Debug, Sum, Concat, Multiply и другие (17 нод)
 - **Пины**: Все входы/выходы для нод (74 пина)
-- **Данные**: Alias, Connector, PinValue для всех флоу
-
-#### 1.4 Загрузите данные Flow с координатами для UI
-```sql
--- В SQL Server Management Studio откройте и выполните:
-:r c:\Other\fitr-master\script1.sql
-```
-
-Этот скрипт создаст:
 - **24 Flow** (Задача1-17, Test, Update Test и другие)
 - **452 Flow_Node** с координатами X,Y для визуального редактора
+- **Данные**: Alias, Connector, PinValue для всех флоу (~2000+ записей)
 
-**⚠️ ВАЖНО:** Полная документация по порядку выполнения скриптов находится в [DATABASE_EXECUTION_ORDER.md](DATABASE_EXECUTION_ORDER.md)
+#### 1.2 Добавьте поддержку цветов для нод
+```sql
+-- В SQL Server Management Studio откройте и выполните:
+:r c:\Other\fitr-master\ADD_COLOR_COLUMN.sql
+```
 
-#### 1.5 (Опционально) Добавьте роли
+Этот скрипт добавит:
+- **Колонку Color** в таблицу Flow_Node (для отображения цвета нод из subflows)
+
+#### 1.3 (Опционально) Добавьте роли
 ```sql
 -- Только если нужны роли для Auth системы:
 SET IDENTITY_INSERT [dbo].[User_Role] ON 

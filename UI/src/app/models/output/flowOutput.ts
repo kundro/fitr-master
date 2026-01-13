@@ -19,6 +19,7 @@ export interface IFlowNodeOutputModel {
   name: string;
   x: number;
   y: number;
+  color?: string;
   isActive: boolean;
   commandType: NodeCommandType;
   command: string;

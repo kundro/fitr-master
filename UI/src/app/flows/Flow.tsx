@@ -122,10 +122,22 @@ export default function Flow({ id }: IFlowParams) {
     });
   };
 
+  const generateColorFromId = (id: number): string => {
+    // Generate a consistent color based on Flow ID
+    const hue = (id * 137.508) % 360; // Golden angle for nice distribution
+    return `hsl(${hue}, 70%, 85%)`; // Light pastel colors
+  };
+
   const onAddFlow = (id: number) => {
     api.flow.get(id, {
       success: (response) => {
         updateKeys(response.nodes);
+
+        // Assign color to all nodes from this subflow
+        const subflowColor = generateColorFromId(id);
+        response.nodes.forEach((node) => {
+          node.color = subflowColor;
+        });
 
         const connectors: ObservableValue<IConnectorObservable>[] = [];
 
