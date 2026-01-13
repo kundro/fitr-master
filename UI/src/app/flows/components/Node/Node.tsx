@@ -97,7 +97,7 @@ export default function Node({
                 "node-selected": selected,
               })}
               style={{
-                backgroundColor: observer.model.color || "transparent",
+                backgroundColor: observer.model.color || "#f0f0f0",
               }}
             >
               <div className="d-flex flex-row justify-content-between">
