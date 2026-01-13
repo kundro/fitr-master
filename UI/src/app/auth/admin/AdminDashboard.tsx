@@ -51,7 +51,8 @@ export default function AdminDashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        setPendingTeachers(data);
+        const result = data.result || data;
+        setPendingTeachers(Array.isArray(result) ? result : []);
       } else if (response.status === 401) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");

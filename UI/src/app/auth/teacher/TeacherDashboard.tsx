@@ -70,7 +70,8 @@ export default function TeacherDashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        setPendingStudents(data);
+        const result = data.result || data;
+        setPendingStudents(Array.isArray(result) ? result : []);
       } else if (response.status === 401) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
