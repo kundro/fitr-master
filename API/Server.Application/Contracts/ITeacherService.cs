@@ -1,5 +1,6 @@
 using Server.Application.Models.Input.Assignment;
 using Server.Application.Models.Output.Assignment;
+using Server.Application.Models.Output.Auth;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
