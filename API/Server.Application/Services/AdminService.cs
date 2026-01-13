@@ -46,7 +46,7 @@ namespace Server.Application.Services
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Role = u.Role.Name,
-                RegisteredDate = u.AddDate
+                RegisteredDate = u.AddDate ?? DateTime.UtcNow
             });
         }
 
@@ -54,7 +54,7 @@ namespace Server.Application.Services
         {
             var teacher = await _userRepository.GetAsync(teacherId);
             if (teacher == null)
-                throw new Exception("Teacher not found");
+                throw new InvalidOperationException($"Teacher with ID {teacherId} not found");
 
             teacher.IsApproved = true;
             teacher.ApprovedBy = adminId;
@@ -69,7 +69,7 @@ namespace Server.Application.Services
         {
             var teacher = await _userRepository.GetAsync(teacherId);
             if (teacher == null)
-                throw new Exception("Teacher not found");
+                throw new InvalidOperationException($"Teacher with ID {teacherId} not found");
 
             await _userRepository.DeleteAsync(teacher);
         }

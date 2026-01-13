@@ -58,7 +58,7 @@ namespace Server.Application.Services
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Role = u.Role.Name,
-                RegisteredDate = u.AddDate
+                RegisteredDate = u.AddDate ?? DateTime.UtcNow
             });
         }
 

@@ -133,13 +133,15 @@ namespace Server.Application.Services
             return dto?.Id ?? 0;
         }
 
-        public async Task UpdateFlowAsync(FlowInputModel model)
+        public Task UpdateFlowAsync(FlowInputModel model)
         {
             //var dto = model.MapToFlow();
 
             //if (dto != null)
             //{
             //}
+            
+            return Task.CompletedTask;
         }
 
         public async Task DeleteFlowAsync(int id)
