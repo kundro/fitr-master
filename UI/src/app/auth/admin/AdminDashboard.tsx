@@ -41,7 +41,7 @@ export default function AdminDashboard() {
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
-        "http://localhost:5000/api/admin/pending-teachers",
+        "https://localhost:44300/api/admin/pending-teachers",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/admin/approve-teacher/${teacherId}`,
+        `https://localhost:44300/api/admin/approve-teacher/${teacherId}`,
         {
           method: "POST",
           headers: {
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/admin/reject-teacher/${teacherId}`,
+        `https://localhost:44300/api/admin/reject-teacher/${teacherId}`,
         {
           method: "POST",
           headers: {

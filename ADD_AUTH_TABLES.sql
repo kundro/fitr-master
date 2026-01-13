@@ -15,6 +15,7 @@ BEGIN
     CREATE TABLE [dbo].[User_Role] (
         [Id] INT IDENTITY(1,1) NOT NULL,
         [Name] NVARCHAR(50) NOT NULL,
+        [Description] NVARCHAR(255) NULL,
         
         [AddDate] DATETIME DEFAULT GETDATE() NOT NULL,
         [AddSource] NVARCHAR(50) NOT NULL DEFAULT '',
@@ -43,6 +44,8 @@ BEGIN
         [LastName] NVARCHAR(100) NOT NULL,
         [RoleId] INT NOT NULL,
         [IsApproved] BIT NOT NULL DEFAULT 0,
+        [ApprovedBy] INT NULL,
+        [ApprovedDate] DATETIME NULL,
         
         [AddDate] DATETIME DEFAULT GETDATE() NOT NULL,
         [AddSource] NVARCHAR(50) NOT NULL DEFAULT '',
@@ -51,6 +54,7 @@ BEGIN
         
         CONSTRAINT [PK_User] PRIMARY KEY ([Id]),
         CONSTRAINT [FK_User_Role] FOREIGN KEY ([RoleId]) REFERENCES [dbo].[User_Role]([Id]),
+        CONSTRAINT [FK_User_ApprovedBy] FOREIGN KEY ([ApprovedBy]) REFERENCES [dbo].[User]([Id]),
         CONSTRAINT [UQ_User_Email] UNIQUE ([Email])
     );
     
@@ -128,11 +132,11 @@ IF NOT EXISTS (SELECT * FROM [dbo].[User_Role] WHERE [Name] = 'Admin')
 BEGIN
     SET IDENTITY_INSERT [dbo].[User_Role] ON;
     
-    INSERT INTO [dbo].[User_Role] ([Id], [Name], [AddSource]) 
+    INSERT INTO [dbo].[User_Role] ([Id], [Name], [Description], [AddSource]) 
     VALUES 
-        (1, 'Admin', 'Script'),
-        (2, 'Teacher', 'Script'),
-        (3, 'Student', 'Script');
+        (1, 'Admin', 'System administrator with full access', 'Script'),
+        (2, 'Teacher', 'Can create assignments and approve students', 'Script'),
+        (3, 'Student', 'Can view and submit assignments', 'Script');
     
     SET IDENTITY_INSERT [dbo].[User_Role] OFF;
     

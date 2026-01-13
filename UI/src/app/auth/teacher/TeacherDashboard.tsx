@@ -60,7 +60,7 @@ export default function TeacherDashboard() {
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
-        "http://localhost:5000/api/teacher/pending-students",
+        "https://localhost:44300/api/teacher/pending-students",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ export default function TeacherDashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/teacher/approve-student/${studentId}`,
+        `https://localhost:44300/api/teacher/approve-student/${studentId}`,
         {
           method: "POST",
           headers: {
@@ -117,7 +117,7 @@ export default function TeacherDashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/teacher/reject-student/${studentId}`,
+        `https://localhost:44300/api/teacher/reject-student/${studentId}`,
         {
           method: "POST",
           headers: {
