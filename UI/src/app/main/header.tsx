@@ -30,9 +30,9 @@ export default function Header({ authPage }: { authPage?: boolean }) {
   const getDashboardPath = () => {
     if (!user || !user.role) return "/";
     const role = user.role.toLowerCase();
-    if (role === "admin") return "/admin-dashboard";
-    if (role === "teacher") return "/teacher-dashboard";
-    if (role === "student") return "/student-dashboard";
+    if (role === "admin") return "/admin";
+    if (role === "teacher") return "/teacher";
+    if (role === "student") return "/student";
     return "/";
   };
 
