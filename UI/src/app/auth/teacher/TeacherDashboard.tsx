@@ -261,7 +261,7 @@ export default function TeacherDashboard() {
             <Button color="primary" onClick={() => history.push("/flows")}>
               Manage Flows
             </Button>
-            <Button color="primary" onClick={() => history.push("/runs")}>
+            <Button color="primary" onClick={() => history.push("/run")}>
               View Runs
             </Button>
           </div>
