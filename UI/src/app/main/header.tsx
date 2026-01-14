@@ -27,6 +27,15 @@ export default function Header({ authPage }: { authPage?: boolean }) {
     history.push("/login");
   };
 
+  const getDashboardPath = () => {
+    if (!user || !user.role) return "/";
+    const role = user.role.toLowerCase();
+    if (role === "admin") return "/admin-dashboard";
+    if (role === "teacher") return "/teacher-dashboard";
+    if (role === "student") return "/student-dashboard";
+    return "/";
+  };
+
   const handleUserDialogOpen = () => {
     setOpen(true);
   };
@@ -118,6 +127,13 @@ export default function Header({ authPage }: { authPage?: boolean }) {
               <li className="nav-item">
                 <a className="nav-link" href="/">
                   <span className="custom-link">HOME</span>
+                </a>
+              </li>
+            )}
+            {!authPage && user && (
+              <li className="nav-item">
+                <a className="nav-link" href={getDashboardPath()}>
+                  <span className="custom-link">DASHBOARD</span>
                 </a>
               </li>
             )}
