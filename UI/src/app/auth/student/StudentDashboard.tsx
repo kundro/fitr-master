@@ -78,7 +78,7 @@ export default function StudentDashboard() {
           <p className="text-muted mb-3">
             View your runs and submissions:
           </p>
-          <Button color="primary" onClick={() => history.push("/runs")}>
+          <Button color="primary" onClick={() => history.push("/run")}>
             View My Runs
           </Button>
         </Card>

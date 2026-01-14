@@ -29,13 +29,25 @@ const renderButtonCard = (name: string, iconName: string, href: string) => (
 
 function App() {
   initializeIcons(undefined, { disableWarnings: true });
+  const [user, setUser] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const isAdmin = user?.role?.toLowerCase() === "admin";
+  const isTeacher = user?.role?.toLowerCase() === "teacher";
+  const isStudent = user?.role?.toLowerCase() === "student";
 
   return (
     <Navbar>
       <div className="container">
         <div className="row justify-content-center">
-          {renderButtonCard("Platforms", "ConnectVirtualMachine", "platforms")}
-          {renderButtonCard("Flows", "HighlightMappedShapes", "flows")}
+          {(isAdmin) && renderButtonCard("Platforms", "ConnectVirtualMachine", "platforms")}
+          {(isAdmin || isTeacher) && renderButtonCard("Flows", "HighlightMappedShapes", "flows")}
           {renderButtonCard("Runs", "ServerProcesses", "run")}
         </div>
       </div>
