@@ -18,9 +18,9 @@ export default function HelpPage() {
         <Card className="p-4">
           <h2 className="mb-4">TaskCraft© Help & Documentation</h2>
           
-          <Accordion open={open} toggle={toggle}>
+          <Accordion open={open}>
             <AccordionItem>
-              <AccordionHeader targetId="1">Getting Started</AccordionHeader>
+              <AccordionHeader targetId="1" onClick={() => toggle('1')}>Getting Started</AccordionHeader>
               <AccordionBody accordionId="1">
                 <h5>Creating Your Account</h5>
                 <ol>
@@ -33,7 +33,7 @@ export default function HelpPage() {
             </AccordionItem>
 
             <AccordionItem>
-              <AccordionHeader targetId="2">For Administrators</AccordionHeader>
+              <AccordionHeader targetId="2" onClick={() => toggle('2')}>For Administrators</AccordionHeader>
               <AccordionBody accordionId="2">
                 <h5>Admin Responsibilities</h5>
                 <ul>
@@ -45,7 +45,7 @@ export default function HelpPage() {
             </AccordionItem>
 
             <AccordionItem>
-              <AccordionHeader targetId="3">For Teachers</AccordionHeader>
+              <AccordionHeader targetId="3" onClick={() => toggle('3')}>For Teachers</AccordionHeader>
               <AccordionBody accordionId="3">
                 <h5>Teacher Features</h5>
                 <ul>
@@ -58,7 +58,7 @@ export default function HelpPage() {
             </AccordionItem>
 
             <AccordionItem>
-              <AccordionHeader targetId="4">For Students</AccordionHeader>
+              <AccordionHeader targetId="4" onClick={() => toggle('4')}>For Students</AccordionHeader>
               <AccordionBody accordionId="4">
                 <h5>Student Capabilities</h5>
                 <ul>
@@ -70,7 +70,7 @@ export default function HelpPage() {
             </AccordionItem>
 
             <AccordionItem>
-              <AccordionHeader targetId="5">Working with Flows</AccordionHeader>
+              <AccordionHeader targetId="5" onClick={() => toggle('5')}>Working with Flows</AccordionHeader>
               <AccordionBody accordionId="5">
                 <h5>Flow Creation & Execution</h5>
                 <ul>
@@ -83,7 +83,7 @@ export default function HelpPage() {
             </AccordionItem>
 
             <AccordionItem>
-              <AccordionHeader targetId="6">Troubleshooting</AccordionHeader>
+              <AccordionHeader targetId="6" onClick={() => toggle('6')}>Troubleshooting</AccordionHeader>
               <AccordionBody accordionId="6">
                 <h5>Common Issues</h5>
                 <ul>
