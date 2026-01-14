@@ -6,7 +6,7 @@ export default function HelpPage() {
   return (
     <Navbar>
       <Container className="mt-4 mb-5">
-        <h2 className="mb-4 text-center">TaskCraft© Help & Documentation</h2>
+        <h2 className="mb-4 text-center">Help & Documentation</h2>
         
         <Row>
           <Col md={6} className="mb-4">

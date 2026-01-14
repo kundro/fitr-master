@@ -114,7 +114,7 @@ export default function Header({ authPage }: { authPage?: boolean }) {
           </ul>
 
           <ul className="navbar-nav ml-auto">
-            {!authPage && (
+            {!authPage && user && (
               <li className="nav-item">
                 <a className="nav-link" href="/">
                   <span className="custom-link">HOME</span>
